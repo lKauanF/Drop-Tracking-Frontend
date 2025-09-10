@@ -1,1 +1,50 @@
-/* You can add global styles to this file, and also import other style files */
+/* ----------- Tema e estilos globais do Drop Tracking ----------- */
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+/* Paleta verde como no Figma */
+$primaria: mat.m2-define-palette(mat.$m2-green-palette, 600, 500, 700);
+$acento:   mat.m2-define-palette(mat.$m2-teal-palette, 500);
+$aviso:    mat.m2-define-palette(mat.$m2-red-palette);
+
+/* Tema claro */
+$tema-drop: mat.m2-define-light-theme((
+  color: (
+    primary: $primaria,
+    accent: $acento,
+    warn: $aviso,
+  ),
+  typography: mat.m2-define-typography-config(),
+  density: 0
+));
+
+@include mat.all-component-themes($tema-drop);
+
+/* Reset suave e layout base */
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  background: #f7faf9; /* branco esverdeado suave */
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, Inter, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  color: #1f2937;
+}
+
+/* Helpers */
+.container-centro {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.link-sutil {
+  color: mat.get-theme-color($tema-drop, primary, 600);
+  text-decoration: none;
+}
+.link-sutil:hover { text-decoration: underline; }

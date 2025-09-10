@@ -1,0 +1,16 @@
+<div class="logo" [class.grande]="tamanho === 'grande'">
+  <!-- SVG simples (troque por seu assets se quiser) -->
+  <svg viewBox="0 0 64 64" aria-label="Drop Tracking">
+    <defs>
+      <radialGradient id="g" cx="50%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#a7f3d0" />
+        <stop offset="100%" stop-color="#10b981" />
+      </radialGradient>
+    </defs>
+    <path d="M32 4C32 4 14 24 14 36c0 9.94 8.06 18 18 18s18-8.06 18-18C50 24 32 4 32 4z" fill="url(#g)"/>
+    <circle cx="32" cy="36" r="11" fill="white"/>
+    <rect x="30.5" y="28" width="3" height="16" rx="1.5" fill="#10b981"/>
+    <rect x="24" y="34.5" width="16" height="3" rx="1.5" fill="#10b981"/>
+  </svg>
+  <span class="texto">Drop Tracking</span>
+</div>

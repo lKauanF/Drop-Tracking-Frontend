@@ -1,0 +1,34 @@
+<article class="card">
+  <header class="card__topo">
+    <div class="titulos">
+      <h3 class="nome">{{ paciente.nome }}</h3>
+      <small class="sub">Leito {{ paciente.leito }}</small>
+      <small class="sub">Prontuário {{ paciente.prontuario }}</small>
+    </div>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Mais ações">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item [routerLink]="['/registros']"><mat-icon>list_alt</mat-icon><span>Ver registros</span></button>
+      <button mat-menu-item><mat-icon>edit</mat-icon><span>Editar</span></button>
+      <button mat-menu-item><mat-icon>delete</mat-icon><span>Remover</span></button>
+    </mat-menu>
+  </header>
+
+  <div class="linhas">
+    <div class="linha">
+      <span [class]="pontoSituacao"></span>
+      <span>{{ textoSituacao }}</span>
+    </div>
+
+    <div class="linha">
+      <span>Infusão</span>
+      <b>{{ paciente.infusao_taxa || '—' }}</b>
+    </div>
+  </div>
+
+  <footer class="rodape">
+    <span [class]="classeAlerta">{{ textoAlerta }}</span>
+  </footer>
+</article>

@@ -1,0 +1,124 @@
+<div class="layout">
+  <!-- Rail esquerdo simples, igual ao de Pacientes -->
+  <aside class="rail">
+    <a class="logo" routerLink="/pacientes">
+      <app-logo></app-logo>
+    </a>
+    <nav class="menu">
+      <a class="item" routerLink="/pacientes" aria-label="Pacientes"><mat-icon>groups</mat-icon></a>
+      <a class="item ativo" routerLink="/registros" aria-label="Registros"><mat-icon>table_rows</mat-icon></a>
+      <a class="item" routerLink="/alertas" aria-label="Alertas"><mat-icon>notifications</mat-icon></a>
+      <a class="item" routerLink="/config" aria-label="Config"><mat-icon>settings</mat-icon></a>
+    </nav>
+    <div class="rodape-rail">
+      <a class="item" routerLink="/sobre" aria-label="Sobre"><mat-icon>help</mat-icon></a>
+    </div>
+  </aside>
+
+  <main class="conteudo">
+    <header class="topbar">
+      <h2>Registros</h2>
+      <div class="acoes">
+        <button mat-icon-button (click)="exportarCsv()" aria-label="Exportar CSV"><mat-icon>file_download</mat-icon></button>
+        <button mat-icon-button (click)="imprimir()" aria-label="Imprimir"><mat-icon>print</mat-icon></button>
+      </div>
+    </header>
+
+    <!-- Filtros -->
+    <section class="filtros">
+      <mat-form-field appearance="outline" class="campo">
+        <mat-label>Nome</mat-label>
+        <input matInput [formControl]="filtros.controls.nome">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="campo">
+        <mat-label>Prontuário</mat-label>
+        <input matInput [formControl]="filtros.controls.prontuario">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="campo">
+        <mat-label>Data de</mat-label>
+        <input matInput [matDatepicker]="dp1" [formControl]="filtros.controls.data_de">
+        <mat-datepicker #dp1></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="campo">
+        <mat-label>Data até</mat-label>
+        <input matInput [matDatepicker]="dp2" [formControl]="filtros.controls.data_ate">
+        <mat-datepicker #dp2></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="campo">
+        <mat-label>ID</mat-label>
+        <input matInput [formControl]="filtros.controls.id_bomba" placeholder="Bomba 1">
+      </mat-form-field>
+
+      <div class="campo acoes-filtro">
+        <button mat-stroked-button (click)="limparFiltros()">
+          Limpar
+        </button>
+      </div>
+    </section>
+
+    <!-- Tabela -->
+    <section class="tabela">
+      <div class="wrap" *ngIf="!carregando(); else carregandoTpl">
+        <table>
+          <thead>
+            <tr>
+              <th>Prontuário</th>
+              <th>Nome</th>
+              <th>Infusão</th>
+              <th>Leito</th>
+              <th>Alarme</th>
+              <th>Hora de Alarme</th>
+              <th>ID</th>
+              <th>Data e Hora</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of registros()">
+              <td>{{ r.prontuario }}</td>
+              <td>{{ r.nome }}</td>
+              <td>{{ r.infusao_taxa || '—' }}</td>
+              <td>{{ r.leito }}</td>
+              <td>
+                <span class="tag" [class.alta]="r.alarme==='alto'" [class.baixa]="r.alarme==='baixo'">
+                  {{ r.alarme === 'alto' ? 'Alto' : 'Baixo' }}
+                </span>
+              </td>
+              <td>{{ r.hora_alarme || '—' }}</td>
+              <td>{{ r.bomba_id }}</td>
+              <td>{{ r.data_hora | date:'dd/MM/yyyy - HH:mm' }}</td>
+            </tr>
+            <tr *ngIf="registros().length === 0">
+              <td colspan="8" class="vazio">Nenhum resultado.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #carregandoTpl>
+        <div class="vazio">Carregando...</div>
+      </ng-template>
+    </section>
+
+    <!-- Paginação -->
+    <footer class="paginacao" *ngIf="paginas().length > 1">
+      <button mat-icon-button (click)="irPara(paginaAtual()-1)" [disabled]="paginaAtual()===1">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <button mat-stroked-button
+              *ngFor="let n of paginas()"
+              [color]="n===paginaAtual() ? 'primary' : undefined"
+              (click)="irPara(n)">
+        {{ n }}
+      </button>
+
+      <button mat-icon-button (click)="irPara(paginaAtual()+1)" [disabled]="paginaAtual()===paginas().length">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </footer>
+  </main>
+</div>

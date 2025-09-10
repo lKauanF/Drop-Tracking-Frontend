@@ -1,0 +1,60 @@
+.layout {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  min-height: 100dvh;
+}
+
+/* Rail igual ao de Pacientes */
+.rail {
+  background: #0f6a59;
+  color: #fff;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: start;
+  justify-items: center;
+  padding: 14px 8px;
+
+  .logo { margin: 4px 0 12px; display: inline-flex; }
+  .menu, .rodape-rail { display: grid; gap: 10px; }
+  .item {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: grid; place-items: center; color: #d1fae5; text-decoration: none;
+  }
+  .item:hover { background: rgba(255,255,255,.08); }
+  .item.ativo { background: rgba(255,255,255,.16); }
+}
+
+.conteudo { padding: 22px 24px; }
+
+.topbar {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; margin-bottom: 14px;
+  h2 { margin: 0; font-size: 20px; font-weight: 700; color: #1f2937; }
+  .acoes { display: flex; align-items: center; gap: 8px; }
+}
+
+/* Filtros */
+.filtros {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(160px, 1fr)) 120px;
+  gap: 12px;
+  margin: 8px 0 14px;
+
+  .campo { width: 100%; }
+  .acoes-filtro { display: flex; align-items: end; }
+}
+
+/* Tabela */
+.tabela .wrap { overflow: auto; border-radius: 10px; border: 1px solid #e5e7eb; background: #fff; }
+.tabela table { width: 100%; border-collapse: collapse; min-width: 880px; }
+.tabela th, .tabela td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #374151; }
+.tabela th { background: #f8fafc; text-align: left; font-weight: 600; color: #1f2937; }
+
+.vazio { text-align: center; color: #6b7280; padding: 18px; }
+
+/* Tag de alarme */
+.tag { display: inline-block; padding: 4px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+.tag.baixa { background: #e8f7ef; color: #0f8f63; }
+.tag.alta  { background: #ffe9e4; color: #d44124; }
+
+/* Paginação */
+.paginacao { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 14px 0 8px; }

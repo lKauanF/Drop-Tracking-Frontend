@@ -1,0 +1,50 @@
+.cartao-login {
+  width: min(560px, 92vw);
+  padding: 28px 28px 16px;
+  border-radius: 16px;
+  box-shadow:
+    0 10px 20px rgba(16, 185, 129, .08),
+    0 6px 6px rgba(0, 0, 0, .04);
+
+  .topo {
+    display: grid;
+    place-items: center;
+    margin-bottom: 16px;
+
+    app-logo .texto { display: none; } /* só ícone, como no Figma */
+  }
+
+  .formulario {
+    display: grid;
+    gap: 14px;
+
+    .campo { width: 100%; }
+  }
+
+  .acoes {
+    margin-top: 4px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+
+    .btn-principal {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      height: 44px;
+    }
+    .btn-secundario { height: 44px; }
+  }
+
+  .rodape {
+    text-align: center;
+    margin-top: 12px;
+  }
+}
+
+/* Ajuste de preenchimento dos mat-form-field para lembrar a UI do Figma */
+.mat-mdc-form-field-infix {
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+}

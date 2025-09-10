@@ -1,0 +1,52 @@
+<div class="container-centro">
+  <mat-card class="cartao-cadastro" appearance="outlined">
+    <div class="topo">
+      <app-logo tamanho="grande"></app-logo>
+    </div>
+
+    <form [formGroup]="formulario" (ngSubmit)="aoCadastrar()" class="formulario" autocomplete="off">
+      <mat-form-field appearance="fill" class="campo">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" inputmode="numeric" placeholder="000.000.000-00" />
+        <mat-error *ngIf="formulario.get('cpf')?.hasError('required')">Informe o CPF</mat-error>
+        <mat-error *ngIf="formulario.get('cpf')?.hasError('cpfInvalido')">CPF inválido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="campo">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" placeholder="Seu nome completo" />
+        <mat-error *ngIf="formulario.get('nome')?.hasError('required')">Informe o nome</mat-error>
+        <mat-error *ngIf="formulario.get('nome')?.hasError('minlength')">Nome muito curto</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="campo">
+        <mat-label>Senha</mat-label>
+        <input matInput [type]="exibirSenha() ? 'text' : 'password'" formControlName="senha" />
+        <button mat-icon-button type="button" matSuffix (click)="alternarSenha()" [attr.aria-label]="'Alternar visibilidade da senha'">
+          <mat-icon>{{ exibirSenha() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error *ngIf="formulario.get('senha')?.hasError('required')">Informe a senha</mat-error>
+        <mat-error *ngIf="formulario.get('senha')?.hasError('minlength')">Mínimo de 4 caracteres</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="campo">
+        <mat-label>Confirmar Senha</mat-label>
+        <input matInput [type]="exibirConfirmar() ? 'text' : 'password'" formControlName="confirmarSenha" />
+        <button mat-icon-button type="button" matSuffix (click)="alternarConfirmar()" [attr.aria-label]="'Alternar visibilidade da confirmação'">
+          <mat-icon>{{ exibirConfirmar() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error *ngIf="formulario.get('confirmarSenha')?.hasError('required')">Confirme a senha</mat-error>
+        <mat-error *ngIf="formulario.hasError('senhasDiferentes')">As senhas não coincidem</mat-error>
+      </mat-form-field>
+
+      <div class="acoes">
+        <button mat-raised-button color="primary" class="btn-principal" type="submit" [disabled]="carregando() || formulario.invalid">
+          <mat-progress-spinner *ngIf="carregando()" mode="indeterminate" diameter="16"></mat-progress-spinner>
+          <span *ngIf="!carregando()">Cadastrar</span>
+        </button>
+
+        <a mat-stroked-button class="btn-secundario" routerLink="/entrar">Voltar</a>
+      </div>
+    </form>
+  </mat-card>
+</div>
