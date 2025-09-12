@@ -5,25 +5,53 @@
     </div>
 
     <form [formGroup]="formulario" (ngSubmit)="aoEnviar()" class="formulario">
+      <!-- CPF -->
       <mat-form-field appearance="fill" class="campo">
         <mat-label>CPF</mat-label>
-        <input matInput formControlName="cpf" placeholder="00000000000" autocomplete="username" />
+        <input
+          matInput
+          formControlName="cpf"
+          appMascaraCpf
+          inputmode="numeric"
+          placeholder="000.000.000-00"
+          autocomplete="username"
+          maxlength="14"
+        />
         <mat-error *ngIf="formulario.get('cpf')?.hasError('required')">Informe o CPF</mat-error>
-        <mat-error *ngIf="formulario.get('cpf')?.hasError('minlength')">CPF incompleto</mat-error>
+        <mat-error *ngIf="formulario.get('cpf')?.hasError('pattern')">CPF incompleto</mat-error>
       </mat-form-field>
 
+      <!-- Senha -->
       <mat-form-field appearance="fill" class="campo">
         <mat-label>Senha</mat-label>
-        <input matInput [type]="exibirSenha() ? 'text' : 'password'" formControlName="senha" autocomplete="current-password" />
-        <button mat-icon-button type="button" matSuffix (click)="alternarVisibilidadeSenha()" [attr.aria-label]="'Alternar visibilidade da senha'">
+        <input
+          matInput
+          [type]="exibirSenha() ? 'text' : 'password'"
+          formControlName="senha"
+          autocomplete="current-password"
+        />
+        <button
+          mat-icon-button
+          type="button"
+          matSuffix
+          (click)="alternarVisibilidadeSenha()"
+          [attr.aria-label]="'Alternar visibilidade da senha'"
+        >
           <mat-icon>{{ exibirSenha() ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
         <mat-error *ngIf="formulario.get('senha')?.hasError('required')">Informe a senha</mat-error>
         <mat-error *ngIf="formulario.get('senha')?.hasError('minlength')">Mínimo de 4 caracteres</mat-error>
       </mat-form-field>
 
+      <!-- Ações -->
       <div class="acoes">
-        <button mat-raised-button color="primary" class="btn-principal" type="submit" [disabled]="carregando() || formulario.invalid">
+        <button
+          mat-raised-button
+          color="primary"
+          class="btn-principal"
+          type="submit"
+          [disabled]="carregando() || formulario.invalid"
+        >
           <mat-progress-spinner *ngIf="carregando()" mode="indeterminate" diameter="16"></mat-progress-spinner>
           <span *ngIf="!carregando()">Entrar</span>
         </button>

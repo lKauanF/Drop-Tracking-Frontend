@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router'
+import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -11,7 +11,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../core/services/auth.service';
 import { LogoComponent } from '../../../shared/components/logo/logo.component';
-
+import { MascaraCpfDirective } from '../login/mascara-cpf.directive';
 
 @Component({
   selector: 'app-login',
@@ -19,8 +19,8 @@ import { LogoComponent } from '../../../shared/components/logo/logo.component';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   imports: [
-    CommonModule,              
-    RouterLink, 
+    CommonModule,
+    RouterLink,
     ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
@@ -30,6 +30,7 @@ import { LogoComponent } from '../../../shared/components/logo/logo.component';
     MatSnackBarModule,
     MatProgressSpinnerModule,
     LogoComponent,
+    MascaraCpfDirective, // <- diretiva de máscara
   ],
 })
 export class LoginComponent {
@@ -42,7 +43,8 @@ export class LoginComponent {
   carregando = signal(false);
 
   formulario = this.fb.group({
-    cpf: ['', [Validators.required, Validators.minLength(11)]],
+    // pattern garante exatamente 11 dígitos (o FormControl guarda só números)
+    cpf: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]],
     senha: ['', [Validators.required, Validators.minLength(4)]],
   });
 
@@ -68,7 +70,7 @@ export class LoginComponent {
         this.carregando.set(false);
         const msg = e?.error?.detail || 'Falha ao entrar. Verifique suas credenciais.';
         this.snackbar.open(msg, 'Fechar', { duration: 3500 });
-      }
+      },
     });
   }
 }
