@@ -1,72 +1,180 @@
-/* Layout centralizado e dimensões do card para ficar como no Figma */
-.container-centro {
-  min-height: 100dvh;
-  display: grid;
-  place-items: center;
-  background: #ffffff;
+.login, .login * , .login *::before, .login *::after { box-sizing: border-box; }
+
+/* ===== Tokens ===== */
+.login{
+  --bg: #ffffff;
+  --card: #ffffff;
+  --text: #0f2a2e;
+  --muted: #6b7a80;
+  --primary: #46b39c;
+  --primary-600: #3aa089;
+  --primary-100: #e6f6f2;
+  --border: #e3e8ea;
+  --shadow: 0 10px 24px rgba(16,24,40,.08);
+
+  --lift: -8vh;        /* sobe/desce o bloco */
+  --logo-size: 248px;  /* tamanho da logo */
+
+  position: fixed; inset: 0; overflow: hidden; /* sem scroll */
+  display: grid; place-items: center;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-.cartao-login {
-  width: 520px; /* ajuste fino do Figma */
-  padding: 24px 28px 16px;
-  border-radius: 16px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.06);
+/* ===== Container ===== */
+.login .login__container{
+  width: 100%; max-width: 520px;
+  display: grid; gap: 16px; justify-items: center;
+  transform: translateY(var(--lift));
+  padding-inline: clamp(16px, 6vw, 32px);
+}
+@media (max-width: 480px){
+  .login .login__container{ --lift: -4vh; }
 }
 
-/* Topo com logo centralizado */
-.topo {
-  display: flex;
-  justify-content: center;
-  margin: 8px 0 6px;
+/* ===== Brand ===== */
+.login .brand{ display: grid; justify-items: center; gap: 14px; }
+.login .brand__logo{
+  width: var(--logo-size); height: var(--logo-size);
+  object-fit: contain; background: transparent; border: 0; padding: 0;
+}
+.login .brand__name{ margin: 0; font-weight: 700; font-size: 22px; }
+
+/* ===== Card ===== */
+.login .card{
+  width: 100%; max-width: 460px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 24px 32px 22px;
+  margin-inline: auto;
+}
+@media (max-width: 520px){
+  .login .card{
+    margin-inline: clamp(12px, 4vw, 20px);
+    padding: 20px;
+  }
 }
 
-/* Campos */
-.formulario {
-  margin-top: 4px;
-}
-.campo {
-  width: 100%;
-  margin-bottom: 12px;
+/* ===== Campos ===== */
+.login .field{ display: grid; }
+.login .field + .field{ margin-top: 14px; }
+
+/* label escondido mas acessível */
+.login .sr-only{
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
 }
 
-/* Aparência "fill" do Angular Material com cantos arredondados claros (estilo Figma) */
-:host ::ng-deep .mat-mdc-text-field-wrapper {
+.login .error {
+color: red;
+}
+
+/* Inputs */
+.login input{
+  height: 46px; width: 100%; max-width: 100%;
+  border: 1px solid #e7eeec;
   border-radius: 12px;
+  padding: 0 18px;                  /* respiro interno */
+  font-size: 14px;
+  background: #f1f6f5;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s, background .2s;
 }
-:host ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
-  background: #f7fbfb;
+.login input::placeholder{ color:#9aa6ab; }
+.login input:focus{
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-100);
+  background: #fff;
 }
 
-/* Ações lado a lado, com proporção e espaçamento */
-.acoes {
-  display: flex;
+/* Senha + olho */
+.password-wrapper{ position: relative; }
+.password-wrapper input{ padding-right: 48px; } /* espaço para o olho */
+
+.toggle-eye{
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  background: transparent; border: 0; cursor: pointer;
+  z-index: 3; color: #6b7a80; border-radius: 6px;
+}
+.toggle-eye:hover{ background:#eef2f1; }
+.toggle-eye svg{ display:block; width:20px; height:20px; stroke: currentColor; fill: none; }
+
+/* Esconde o olho nativo do Edge */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear{ display: none; }
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-textfield-decoration-container{ display: none; }
+
+/* ===== Ações ===== */
+.login .actions{
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-top: 4px;
+}
+.login .btn{
+  height: 44px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid transparent;
+  display: grid; place-items: center;
+  text-decoration: none; cursor: pointer; user-select: none;
+}
+.login .btn-primary{ background: var(--primary); color:#fff; }
+.login .btn-primary:hover{ background: var(--primary-600); }
+.login .btn-ghost{ background:#fff; color:var(--text); border-color: var(--border); }
+.login .btn-ghost:hover{ background:#f3f6f6; }
+
+/* Link (sem sublinhado por padrão) */
+.login .forgot { text-align: center; margin-top: 12px; }
+
+.login .forgot a{
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;            /* sem linha */
 }
 
-.btn-principal,
-.btn-secundario {
-  flex: 1;
-  height: 40px;
-  border-radius: 10px;
+.login .forgot a .accent{
+  color: var(--primary);            /* “senha” verde */
+  font-weight: 600;
 }
 
-.btn-principal .mat-mdc-progress-spinner {
-  margin-right: 8px;
+/* só no hover (e foco por teclado) mostra linha PRETA */
+.login .forgot a:hover,
+.login .forgot a:focus-visible{
+  text-decoration-line: underline;
+  text-decoration-color: #a5a5a5;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 1px;
+  outline: none;
 }
 
-/* Rodapé (link sutil) */
-.rodape {
-  display: flex;
-  justify-content: center;
-  margin-top: 12px;
+/* tokens extras */
+.login {
+  --danger: #d92d20;
+  --danger-ink: #7a271a;
+  --danger-100: #fee4e2;
 }
 
-.link-sutil {
+/* mensagem de erro com cara mais profissional */
+.login .error{
+  margin-top: 6px;
+  font-family: "Sora", Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 600;
   font-size: 12px;
-  color: #6b7b86;
-  text-decoration: none;
+  color: var(--danger);
 }
-.link-sutil:hover {
-  text-decoration: underline;
+
+/* (opcional) realçar o campo quando inválido/tocado */
+.login .field:has(.error) input{
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px var(--danger-100);
+  background: #fff;
 }

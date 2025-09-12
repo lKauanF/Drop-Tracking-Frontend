@@ -1,76 +1,107 @@
-import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { AuthService } from '../../../core/services/auth.service';
-import { LogoComponent } from '../../../shared/components/logo/logo.component';
-import { MascaraCpfDirective } from '../login/mascara-cpf.directive';
+import { Component } from '@angular/core';
+import { CommonModule, NgIf } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
+  imports: [CommonModule, RouterLink, NgIf],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  imports: [
-    CommonModule,
-    RouterLink,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    LogoComponent,
-    MascaraCpfDirective, // <- diretiva de máscara
-  ],
 })
 export class LoginComponent {
-  private fb = inject(FormBuilder);
-  private auth = inject(AuthService);
-  private router = inject(Router);
-  private snackbar = inject(MatSnackBar);
+  // UI
+  showPassword = false;
 
-  exibirSenha = signal(false);
-  carregando = signal(false);
+  // Campos
+  cpf = '';         // somente dígitos
+  cpfMascara = '';  // exibição 000.000.000-00
+  senha = '';
 
-  formulario = this.fb.group({
-    // pattern garante exatamente 11 dígitos (o FormControl guarda só números)
-    cpf: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]],
-    senha: ['', [Validators.required, Validators.minLength(4)]],
-  });
+  // Estado
+  cpfTouched = false;
+  senhaTouched = false;
+  authError = '';
 
-  alternarVisibilidadeSenha() {
-    this.exibirSenha.update(v => !v);
+  // ---- Validações ----
+  get cpfCompleto(): boolean {
+    return /^\d{11}$/.test(this.cpf);
   }
 
-  aoEnviar() {
-    if (this.formulario.invalid) {
-      this.formulario.markAllAsTouched();
-      return;
-    }
-    const { cpf, senha } = this.formulario.getRawValue() as { cpf: string; senha: string };
+  get cpfValido(): boolean {
+    return this.cpfCompleto && this.validarCpf(this.cpf);
+  }
 
-    this.carregando.set(true);
-    this.auth.entrar(cpf, senha).subscribe({
-      next: () => {
-        this.carregando.set(false);
-        this.snackbar.open('Bem-vindo(a)!', undefined, { duration: 2000 });
-        this.router.navigateByUrl('/pacientes');
-      },
-      error: (e) => {
-        this.carregando.set(false);
-        const msg = e?.error?.detail || 'Falha ao entrar. Verifique suas credenciais.';
-        this.snackbar.open(msg, 'Fechar', { duration: 3500 });
-      },
-    });
+  /** Valida CPF pelo algoritmo dos dígitos verificadores */
+  private validarCpf(cpf: string): boolean {
+    if (!/^\d{11}$/.test(cpf)) return false;
+    // Rejeita CPFs com todos os dígitos iguais
+    if (/^(\d)\1{10}$/.test(cpf)) return false;
+
+    const calcDig = (len: number) => {
+      let soma = 0;
+      for (let i = 0; i < len; i++) {
+        soma += Number(cpf[i]) * (len + 1 - i);
+      }
+      const resto = soma % 11;
+      return resto < 2 ? 0 : 11 - resto;
+    };
+
+    const d1 = calcDig(9);
+    const d2 = calcDig(10);
+    return d1 === Number(cpf[9]) && d2 === Number(cpf[10]);
+  }
+
+  // ---- Interações ----
+  toggleShowPassword() { this.showPassword = !this.showPassword; }
+
+  filtrarTeclas(ev: KeyboardEvent) {
+    const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
+    if (allowed.includes(ev.key)) return;
+    if (!/^\d$/.test(ev.key)) ev.preventDefault();
+  }
+
+  onCpfInput(ev: Event) {
+    const input = ev.target as HTMLInputElement;
+    const apenasDigitos = (input.value || '').replace(/\D/g, '').slice(0, 11);
+    this.cpf = apenasDigitos;
+    this.cpfMascara = this.aplicarMascaraCpf(apenasDigitos);
+  }
+
+  onCpfPaste(ev: ClipboardEvent) {
+    ev.preventDefault();
+    const txt = ev.clipboardData?.getData('text') ?? '';
+    const apenasDigitos = txt.replace(/\D/g, '').slice(0, 11);
+    this.cpf = apenasDigitos;
+    this.cpfMascara = this.aplicarMascaraCpf(apenasDigitos);
+  }
+
+  private aplicarMascaraCpf(v: string): string {
+    const p1 = v.substring(0, 3);
+    const p2 = v.substring(3, 6);
+    const p3 = v.substring(6, 9);
+    const p4 = v.substring(9, 11);
+    let out = '';
+    if (p1) out += p1;
+    if (p2) out += (out ? '.' : '') + p2;
+    if (p3) out += (out ? '.' : '') + p3;
+    if (p4) out += (out ? '-' : '') + p4;
+    return out;
+  }
+
+  onSenhaInput(ev: Event) {
+    this.senha = (ev.target as HTMLInputElement).value;
+  }
+
+  onSubmit() {
+    this.authError = '';
+    this.cpfTouched = true;
+    this.senhaTouched = true;
+
+    if (!this.cpfValido) return; // agora exige CPF válido (não só 11 dígitos)
+    if (!this.senha) return;
+
+    // Chamada real ao backend iria aqui com this.cpf e this.senha
+    this.authError = 'Senha incorreta.'; // demo
   }
 }

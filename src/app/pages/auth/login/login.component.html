@@ -1,67 +1,92 @@
-<div class="container-centro">
-  <mat-card class="cartao-login" appearance="outlined">
-    <div class="topo">
-      <app-logo tamanho="grande"></app-logo>
-    </div>
+<main class="login" role="main">
+  <section class="login__container" aria-labelledby="loginTitle">
+    <!-- Marca -->
+    <header class="brand" aria-label="Drop Tracking">
+      <img class="brand__logo" src="../../../../assets/Logo.svg" alt="" />
+      <h1 id="loginTitle" class="brand__name">Drop Tracking</h1>
+    </header>
 
-    <form [formGroup]="formulario" (ngSubmit)="aoEnviar()" class="formulario">
-      <!-- CPF -->
-      <mat-form-field appearance="fill" class="campo">
-        <mat-label>CPF</mat-label>
+    <!-- Card -->
+    <div class="card">
+      <!-- CPF (único) -->
+      <div class="field">
+        <label class="sr-only" for="cpf">CPF</label>
         <input
-          matInput
-          formControlName="cpf"
-          appMascaraCpf
+          id="cpf"
+          type="text"
           inputmode="numeric"
-          placeholder="000.000.000-00"
           autocomplete="username"
+          placeholder="CPF:"
           maxlength="14"
+          [value]="cpfMascara"
+          (input)="onCpfInput($event)"
+          (keydown)="filtrarTeclas($event)"
+          (paste)="onCpfPaste($event)"
+          (blur)="cpfTouched = true"
         />
-        <mat-error *ngIf="formulario.get('cpf')?.hasError('required')">Informe o CPF</mat-error>
-        <mat-error *ngIf="formulario.get('cpf')?.hasError('pattern')">CPF incompleto</mat-error>
-      </mat-form-field>
+
+        <!-- Erro: incompleto -->
+        <div class="error" *ngIf="cpfTouched && !cpfCompleto">
+          CPF deve ter 11 números.
+        </div>
+        <!-- Erro: inválido (algoritmo) -->
+        <div class="error" *ngIf="cpfTouched && cpfCompleto && !cpfValido">
+          CPF inválido.
+        </div>
+      </div>
 
       <!-- Senha -->
-      <mat-form-field appearance="fill" class="campo">
-        <mat-label>Senha</mat-label>
-        <input
-          matInput
-          [type]="exibirSenha() ? 'text' : 'password'"
-          formControlName="senha"
-          autocomplete="current-password"
-        />
-        <button
-          mat-icon-button
-          type="button"
-          matSuffix
-          (click)="alternarVisibilidadeSenha()"
-          [attr.aria-label]="'Alternar visibilidade da senha'"
-        >
-          <mat-icon>{{ exibirSenha() ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-        <mat-error *ngIf="formulario.get('senha')?.hasError('required')">Informe a senha</mat-error>
-        <mat-error *ngIf="formulario.get('senha')?.hasError('minlength')">Mínimo de 4 caracteres</mat-error>
-      </mat-form-field>
+      <div class="field">
+        <label class="sr-only" for="senha">Senha</label>
+        <div class="password-wrapper">
+          <input
+            id="senha"
+            [type]="showPassword ? 'text' : 'password'"
+            autocomplete="current-password"
+            placeholder="Senha:"
+            [value]="senha"
+            (input)="onSenhaInput($event)"
+            (blur)="senhaTouched = true"
+          />
+          <button
+            class="toggle-eye"
+            type="button"
+            (click)="toggleShowPassword()"
+            [attr.aria-label]="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+            title="{{ showPassword ? 'Ocultar senha' : 'Mostrar senha' }}"
+          >
+            <ng-container *ngIf="!showPassword">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                   fill="none" stroke="#6b7a80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </ng-container>
+            <ng-container *ngIf="showPassword">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                   fill="none" stroke="#6b7a80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a21.77 21.77 0 0 1 5.06-6.94"/>
+                <path d="M10.58 10.58a2 2 0 1 0 2.83 2.83"/>
+                <path d="M1 1l22 22"/>
+              </svg>
+            </ng-container>
+          </button>
+        </div>
+      </div>
 
       <!-- Ações -->
-      <div class="acoes">
-        <button
-          mat-raised-button
-          color="primary"
-          class="btn-principal"
-          type="submit"
-          [disabled]="carregando() || formulario.invalid"
-        >
-          <mat-progress-spinner *ngIf="carregando()" mode="indeterminate" diameter="16"></mat-progress-spinner>
-          <span *ngIf="!carregando()">Entrar</span>
-        </button>
-
-        <a mat-stroked-button class="btn-secundario" routerLink="/cadastro">Cadastrar</a>
+      <div class="actions">
+        <button class="btn btn-primary" type="button" (click)="onSubmit()">Entrar</button>
+        <a class="btn btn-ghost" routerLink="/cadastro">Cadastrar</a>
       </div>
-    </form>
 
-    <div class="rodape">
-      <a class="link-sutil" routerLink="/recuperar-senha">Esqueceu a senha?</a>
+      <!-- Erro geral -->
+      <div class="auth-error" *ngIf="authError">{{ authError }}</div>
     </div>
-  </mat-card>
-</div>
+
+    <!-- Link fora do card -->
+    <div class="forgot">
+      <a routerLink="/recuperar-senha">Esqueceu a <span class="accent">senha</span>?</a>
+    </div>
+  </section>
+</main>
