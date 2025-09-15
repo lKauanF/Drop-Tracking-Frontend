@@ -1,0 +1,169 @@
+/* ====== Tokens locais (herda dos globais se existirem) ====== */
+:host{
+  --ink: #0f2a2e;
+  --muted: #6b7a80;
+  --border: #e3e8ea;
+  --bg: #ffffff;
+  --shadow: 0 10px 24px rgba(16,24,40,.08);
+
+  --ok: #10b981;             /* verde estado ok */
+  --ok-100: #e8f7f1;
+
+  --warn: #f59e0b;           /* amarelo/oclusão */
+  --warn-100: #fff7e6;
+
+  --alert: #ef4444;          /* vermelho/infusão alta */
+  --alert-100: #feecee;
+
+  --pill-ink: #0f2a2e;
+}
+
+/* ====== Cartão ====== */
+.card{
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 10px;
+
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+
+  padding: 14px 14px 12px;
+  transition: box-shadow .18s ease, transform .18s ease;
+
+  /* leve lift no hover/focus */
+  &:hover{ box-shadow: 0 14px 28px rgba(16,24,40,.12); transform: translateY(-1px); }
+  &:focus-within{ box-shadow: 0 14px 28px rgba(16,24,40,.14); }
+}
+
+/* ====== Topo ====== */
+.card__topo{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.titulos{
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.nome{
+  margin: 0;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sub{
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.2;
+}
+
+/* Botão kebab (3 pontinhos) */
+.kebab{
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  color: #6b7a80;
+}
+.kebab:hover{ background: #f3f6f6; }
+.kebab .mat-icon{ width: 20px; height: 20px; font-size: 20px; }
+
+/* ====== Corpo (linhas) ====== */
+.linhas{
+  display: grid;
+  gap: 8px;
+}
+
+.linha{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 22px;
+}
+
+.label{
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.valor{
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* Ponto de situação */
+.ponto{
+  width: 8px; height: 8px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-right: 6px;
+}
+.ponto--ok{ background: var(--ok); box-shadow: 0 0 0 4px var(--ok-100); }
+.ponto--pausa{ background: var(--warn); box-shadow: 0 0 0 4px var(--warn-100); }
+
+/* opcional: juntar ponto + texto como um chip discreto */
+.linha:first-child{
+  justify-content: flex-start;
+  gap: 8px;
+}
+.linha:first-child .label{ font-weight: 600; color: var(--ink); }
+
+/* ====== Rodapé (tag/status) ====== */
+.rodape{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 2px;
+}
+
+.tag{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: .2px;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* variantes (ligadas ao get classeAlerta()) */
+.tag--normal{
+  color: #0f5132;
+  background: var(--ok-100);
+  border: 1px solid rgba(16,185,129,.25);
+}
+.tag--oclusao{
+  color: #7c4a03;
+  background: var(--warn-100);
+  border: 1px solid rgba(245,158,11,.28);
+}
+.tag--alto{
+  color: #7f1d1d;
+  background: var(--alert-100);
+  border: 1px solid rgba(239,68,68,.25);
+}
+
+/* ====== Responsivo fino ====== */
+@media (max-width: 620px){
+  .card{ padding: 12px; }
+  .nome{ font-size: 14.5px; }
+  .sub{ font-size: 11px; }
+  .label, .valor{ font-size: 12px; }
+  .kebab{ width: 26px; height: 26px; border-radius: 7px; }
+}

@@ -11,9 +11,9 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { PacientesService, Paciente, SituacaoInfusao } from '../../core/services/pacientes.service';
-import { CartaoPacienteComponent } from './components/artao-paciente/cartao-paciente.component';
+import { CartaoPacienteComponent } from './components/cartao-paciente/cartao-paciente.component';
 import { AdicionarPacienteDialog } from './components/dialogs/adicionar-paciente.dialog';
-import { LogoComponent } from '../../shared/components/logo/logo.component';
+
 
 @Component({
   selector: 'app-pacientes',
@@ -30,7 +30,7 @@ import { LogoComponent } from '../../shared/components/logo/logo.component';
     MatDialogModule,
     MatSnackBarModule,
     CartaoPacienteComponent,
-    LogoComponent,
+    
   ],
   templateUrl: './pacientes.component.html',
   styleUrls: ['./pacientes.component.scss'],
@@ -90,13 +90,23 @@ export class PacientesComponent implements OnInit {
   }
 
   abrirDialogAdicionar() {
-    const ref = this.dialog.open(AdicionarPacienteDialog, { disableClose: true });
-    ref.afterClosed().subscribe((pac: Paciente | null) => {
-      if (pac) {
-        this.snackbar.open('Paciente adicionado!', undefined, { duration: 2000 });
-        this.carregar();
-      }
-    });
+  const ref = this.dialog.open(AdicionarPacienteDialog, {
+    disableClose: true,
+    panelClass: 'dlg--paciente',
+    backdropClass: 'backdrop--blur',
+  });
+
+  ref.afterClosed().subscribe((pac: Paciente | null) => {
+    if (pac) {
+      // UPDATE OTIMISTA: mostra o card na hora
+      this.pacientes.update(list => [pac, ...list]);
+      this.total.update(t => t + 1);
+      this.snackbar.open('Paciente adicionado!', undefined, { duration: 2000 });
+
+      // Se preferir garantir que veio do backend com todos os campos:
+      this.carregar(); // pode manter ou remover (otimista puro)
+    }
+  });
   }
 
   irPara(pagina: number) {
@@ -106,4 +116,7 @@ export class PacientesComponent implements OnInit {
   this.paginaAtual.set(alvo);
   this.carregar();
 }
+
+
+
 }

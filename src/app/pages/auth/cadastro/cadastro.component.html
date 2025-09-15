@@ -1,52 +1,147 @@
-<div class="container-centro">
-  <mat-card class="cartao-cadastro" appearance="outlined">
-    <div class="topo">
-      <app-logo tamanho="grande"></app-logo>
-    </div>
+<main class="register" role="main">
+  <section class="register__container" aria-labelledby="registerTitle">
+    <!-- Marca -->
+    <header class="brand" aria-label="Drop Tracking">
+      <!-- use o nome exato do arquivo (respeita maiúsculas/minúsculas) -->
+      <img class="brand__logo" [src]="'/assets/Logo.svg'" alt="Logo" />
+      <h1 id="registerTitle" class="brand__name">Drop Tracking</h1>
+    </header>
 
-    <form [formGroup]="formulario" (ngSubmit)="aoCadastrar()" class="formulario" autocomplete="off">
-      <mat-form-field appearance="fill" class="campo">
-        <mat-label>CPF</mat-label>
-        <input matInput formControlName="cpf" inputmode="numeric" placeholder="000.000.000-00" />
-        <mat-error *ngIf="formulario.get('cpf')?.hasError('required')">Informe o CPF</mat-error>
-        <mat-error *ngIf="formulario.get('cpf')?.hasError('cpfInvalido')">CPF inválido</mat-error>
-      </mat-form-field>
+    <!-- CARD -->
+    <div class="card">
+      <!-- Linha: CPF + Nome -->
+      <div class="row-2">
+        <!-- CPF -->
+        <div class="field">
+          <div class="control">
+            <label class="sr-only" for="cpf">CPF</label>
+            <input
+              id="cpf"
+              type="text"
+              inputmode="numeric"
+              placeholder="CPF:"
+              maxlength="14"
+              [value]="cpfMasked"
+              (keydown)="onCpfKeydown($event)"
+              (paste)="onCpfPaste($event)"
+              (input)="onCpfInput($event)"
+              (blur)="cpfTouched = true"
+              [attr.aria-invalid]="cpfTouched && (!cpfCompleto || !cpfValido)"
+            />
+          </div>
+          <small class="error" *ngIf="cpfTouched && !cpfCompleto">CPF deve ter 11 números.</small>
+          <small class="error" *ngIf="cpfTouched && cpfCompleto && !cpfValido">CPF inválido.</small>
+        </div>
 
-      <mat-form-field appearance="fill" class="campo">
-        <mat-label>Nome</mat-label>
-        <input matInput formControlName="nome" placeholder="Seu nome completo" />
-        <mat-error *ngIf="formulario.get('nome')?.hasError('required')">Informe o nome</mat-error>
-        <mat-error *ngIf="formulario.get('nome')?.hasError('minlength')">Nome muito curto</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="campo">
-        <mat-label>Senha</mat-label>
-        <input matInput [type]="exibirSenha() ? 'text' : 'password'" formControlName="senha" />
-        <button mat-icon-button type="button" matSuffix (click)="alternarSenha()" [attr.aria-label]="'Alternar visibilidade da senha'">
-          <mat-icon>{{ exibirSenha() ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-        <mat-error *ngIf="formulario.get('senha')?.hasError('required')">Informe a senha</mat-error>
-        <mat-error *ngIf="formulario.get('senha')?.hasError('minlength')">Mínimo de 4 caracteres</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="campo">
-        <mat-label>Confirmar Senha</mat-label>
-        <input matInput [type]="exibirConfirmar() ? 'text' : 'password'" formControlName="confirmarSenha" />
-        <button mat-icon-button type="button" matSuffix (click)="alternarConfirmar()" [attr.aria-label]="'Alternar visibilidade da confirmação'">
-          <mat-icon>{{ exibirConfirmar() ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-        <mat-error *ngIf="formulario.get('confirmarSenha')?.hasError('required')">Confirme a senha</mat-error>
-        <mat-error *ngIf="formulario.hasError('senhasDiferentes')">As senhas não coincidem</mat-error>
-      </mat-form-field>
-
-      <div class="acoes">
-        <button mat-raised-button color="primary" class="btn-principal" type="submit" [disabled]="carregando() || formulario.invalid">
-          <mat-progress-spinner *ngIf="carregando()" mode="indeterminate" diameter="16"></mat-progress-spinner>
-          <span *ngIf="!carregando()">Cadastrar</span>
-        </button>
-
-        <a mat-stroked-button class="btn-secundario" routerLink="/entrar">Voltar</a>
+        <!-- Nome -->
+        <div class="field">
+          <div class="control">
+            <label class="sr-only" for="nome">Nome</label>
+            <input
+              id="nome"
+              type="text"
+              placeholder="Nome:"
+              [value]="nome"
+              (keydown)="onNomeKeydown($event)"
+              (input)="onNomeInput($event)"
+              (blur)="nomeTouched = true"
+              [attr.aria-invalid]="nomeTouched && !nomeOk"
+            />
+          </div>
+          <small class="error" *ngIf="nomeTouched && !nomeOk">Use apenas letras (mín. 2).</small>
+        </div>
       </div>
-    </form>
-  </mat-card>
-</div>
+
+      <!-- Senha -->
+      <div class="field">
+        <label class="sr-only" for="senha">Senha</label>
+        <div class="password-wrapper">
+          <input
+            id="senha"
+            [type]="showPass1 ? 'text' : 'password'"
+            placeholder="Senha:"
+            [value]="senha"
+            (input)="onSenhaInput($event)"
+            (blur)="senhaTouched = true"
+            [attr.aria-invalid]="senhaTouched && !(lenOk && upperOk && numberOk && specialOk)"
+          />
+          <button
+            type="button"
+            class="toggle-eye"
+            (click)="toggleEye(1)"
+            [attr.aria-label]="showPass1 ? 'Ocultar senha' : 'Mostrar senha'">
+            <ng-container *ngIf="!showPass1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                   fill="none" stroke="#6b7a80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            </ng-container>
+            <ng-container *ngIf="showPass1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                   fill="none" stroke="#6b7a80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a21.77 21.77 0 0 1 5.06-6.94"/>
+                <path d="M10.58 10.58a2 2 0 1 0 2.83 2.83"/><path d="M1 1l22 22"/>
+              </svg>
+            </ng-container>
+          </button>
+        </div>
+      </div>
+
+      <!-- Confirmar senha -->
+      <div class="field">
+        <label class="sr-only" for="confirmar">Confirmar Senha</label>
+        <div class="password-wrapper">
+          <input
+            id="confirmar"
+            [type]="showPass2 ? 'text' : 'password'"
+            placeholder="Confirmar Senha:"
+            [value]="confirmar"
+            (input)="onConfirmarInput($event)"
+            (blur)="confirmarTouched = true"
+            [attr.aria-invalid]="confirmarTouched && !matchOk"
+          />
+          <button
+            type="button"
+            class="toggle-eye"
+            (click)="toggleEye(2)"
+            [attr.aria-label]="showPass2 ? 'Ocultar senha' : 'Mostrar senha'">
+            <ng-container *ngIf="!showPass2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                   fill="none" stroke="#6b7a80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            </ng-container>
+            <ng-container *ngIf="showPass2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                   fill="none" stroke="#6b7a80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a21.77 21.77 0 0 1 5.06-6.94"/>
+                <path d="M10.58 10.58a2 2 0 1 0 2.83 2.83"/><path d="M1 1l22 22"/>
+              </svg>
+            </ng-container>
+          </button>
+        </div>
+        <small class="error" *ngIf="confirmarTouched && !matchOk">As senhas não coincidem.</small>
+      </div>
+
+      <!-- Força + checklist -->
+      <div class="strength-wrap" *ngIf="senha.length > 0">
+        <div class="strength">
+          <div class="strengthbar"><span class="fill" [style.width.%]="strengthPercent" [style.background]="strengthColor"></span></div>
+          <span class="label">{{ strengthLabel }}</span>
+        </div>
+        <ul class="rules">
+          <li [class.ok]="lenOk">8–20 caracteres</li>
+          <li [class.ok]="upperOk">Pelo menos 1 letra maiúscula</li>
+          <li [class.ok]="numberOk">Pelo menos 1 número</li>
+          <li [class.ok]="specialOk">Pelo menos 1 caractere especial</li>
+        </ul>
+      </div>
+
+      <!-- Ações -->
+      <div class="actions">
+        <button class="btn btn-primary" [disabled]="!formValid" (click)="onSubmit()">Cadastrar</button>
+        <button class="btn btn-ghost" type="button" (click)="voltar()">Voltar</button>
+      </div>
+    </div>
+  </section>
+</main>

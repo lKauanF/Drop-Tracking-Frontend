@@ -1,16 +1,17 @@
 <div class="layout">
-
-  <!-- Barra lateral simples -->
+  <!-- Rail -->
   <aside class="rail">
     <a class="logo" routerLink="/pacientes">
-      <app-logo></app-logo>
+      <img class="logo-img" src="/assets/Logo.svg" alt="Drop Tracking" />
     </a>
+
     <nav class="menu">
       <a class="item ativo" routerLink="/pacientes" aria-label="Pacientes"><mat-icon>groups</mat-icon></a>
       <a class="item" routerLink="/registros" aria-label="Registros"><mat-icon>table_rows</mat-icon></a>
       <a class="item" routerLink="/alertas" aria-label="Alertas"><mat-icon>notifications</mat-icon></a>
       <a class="item" routerLink="/config" aria-label="Config"><mat-icon>settings</mat-icon></a>
     </nav>
+
     <div class="rodape-rail">
       <a class="item" routerLink="/sobre" aria-label="Sobre"><mat-icon>help</mat-icon></a>
     </div>
@@ -19,21 +20,29 @@
   <!-- Conteúdo -->
   <main class="conteudo">
     <header class="topbar">
-      <h2>Pacientes</h2>
-      <button mat-fab color="primary" class="btn-add" (click)="abrirDialogAdicionar()" aria-label="Adicionar Paciente">
-        <mat-icon>add</mat-icon>
-      </button>
+      <div class="title-row">
+        <h2>Pacientes</h2>
+        <button type="button" class="btn-plus" (click)="abrirDialogAdicionar()" aria-label="Adicionar paciente">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <div class="totais">{{ total() }} Pacientes</div>
     </header>
 
-    <!-- Filtros -->
+    <div class="hairline"></div>
+
+    <!-- Filtros (versão slim do Figma) -->
     <section class="filtros">
-      <mat-form-field appearance="outline" class="campo busca">
-        <mat-label>Buscar</mat-label>
-        <input matInput placeholder="Pesquisar por nome, prontuário..." [formControl]="filtros.controls.busca">
-        <button mat-icon-button matSuffix aria-label="Buscar"><mat-icon>search</mat-icon></button>
+      <mat-form-field appearance="outline" class="campo busca slim">
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput placeholder="Buscar" [formControl]="filtros.controls.busca" />
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="campo selecao">
+      <button mat-icon-button class="btn-tune" aria-label="Filtros">
+        <mat-icon>tune</mat-icon>
+      </button>
+
+      <mat-form-field appearance="outline" class="campo selecao slim">
         <mat-label>Situação</mat-label>
         <mat-select [formControl]="filtros.controls.situacao">
           <mat-option value="">Situação atual</mat-option>
@@ -43,13 +52,12 @@
       </mat-form-field>
     </section>
 
+    <div class="hairline thin"></div>
+
     <!-- Grid de cards -->
     <section class="grid">
       <ng-container *ngIf="!carregando(); else carregandoTpl">
-        <app-cartao-paciente
-          *ngFor="let p of pacientes()"
-          [paciente]="p">
-        </app-cartao-paciente>
+        <app-cartao-paciente *ngFor="let p of pacientes()" [paciente]="p"></app-cartao-paciente>
 
         <div *ngIf="pacientes().length === 0" class="vazio">
           Nenhum paciente encontrado.
@@ -61,26 +69,22 @@
       </ng-template>
     </section>
 
- <footer class="paginacao" *ngIf="paginas().length > 1">
-  <button mat-icon-button
-          (click)="irPara(paginaAtual() - 1)"
-          [disabled]="paginaAtual()===1">
-    <mat-icon>chevron_left</mat-icon>
-  </button>
+    <!-- Paginação -->
+    <footer class="paginacao" *ngIf="paginas().length > 1">
+      <button mat-icon-button (click)="irPara(paginaAtual() - 1)" [disabled]="paginaAtual()===1">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
 
-  <button mat-stroked-button
-          *ngFor="let n of paginas()"
-          [color]="n===paginaAtual() ? 'primary' : undefined"
-          (click)="irPara(n)">
-    {{ n }}
-  </button>
+      <button mat-stroked-button
+              *ngFor="let n of paginas()"
+              [class.atual]="n===paginaAtual()"
+              (click)="irPara(n)">
+        {{ n }}
+      </button>
 
-  <button mat-icon-button
-          (click)="irPara(paginaAtual() + 1)"
-          [disabled]="paginaAtual()===paginas().length">
-    <mat-icon>chevron_right</mat-icon>
-  </button>
-</footer>
-
+      <button mat-icon-button (click)="irPara(paginaAtual() + 1)" [disabled]="paginaAtual()===paginas().length">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </footer>
   </main>
 </div>
