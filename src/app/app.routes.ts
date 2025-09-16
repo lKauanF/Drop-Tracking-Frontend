@@ -1,20 +1,29 @@
 import { Routes } from '@angular/router';
 import { PlaceholderComponent } from './shared/components/placeholder/placeholder.component';
-// opcional: import { authGuard } from './core/guards/auth.guard';
+import { ShellComponent } from './layout/shell/shell.component';
+// import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
+  // Público
   { path: '', pathMatch: 'full', redirectTo: 'entrar' },
-
   { path: 'entrar', loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent) },
   { path: 'cadastro', loadComponent: () => import('./pages/auth/cadastro/cadastro.component').then(m => m.cadastroComponent) },
 
-   { path: 'pacientes',
+  // Área logada (Shell com rail + conteúdo)
+  {
+    path: '',
+    component: ShellComponent,
     // canActivate: [authGuard],
-    loadComponent: () => import('./pages/pacientes/pacientes.component').then(m => m.PacientesComponent)
+    children: [
+      { path: 'pacientes', loadComponent: () => import('./pages/pacientes/pacientes.component').then(m => m.PacientesComponent) },
+      { path: 'registros', loadComponent: () => import('./pages/registros/registros.component').then(m => m.RegistrosComponent) },
+      // { path: 'alertas', loadComponent: () => import('./pages/alertas/alertas.component').then(m => m.AlertasComponent) },
+      // { path: 'config', loadComponent: () => import('./pages/config/config.component').then(m => m.ConfigComponent) },
+    ]
   },
 
-  { path: 'registros', loadComponent: () => import('./pages/registros/registros.component').then(m => m.RegistrosComponent) },
-
   { path: 'recuperar-senha', component: PlaceholderComponent, data: { titulo: 'Recuperar senha (em breve)' } },
+
+  // 404
   { path: '**', component: PlaceholderComponent, data: { titulo: 'Não encontrado' } },
 ];

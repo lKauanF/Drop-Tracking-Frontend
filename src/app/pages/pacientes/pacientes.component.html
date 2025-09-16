@@ -1,48 +1,38 @@
 <div class="layout">
-  <!-- Rail -->
-  <aside class="rail">
-    <a class="logo" routerLink="/pacientes">
-      <img class="logo-img" src="/assets/Logo.svg" alt="Drop Tracking" />
-    </a>
-
-    <nav class="menu">
-      <a class="item ativo" routerLink="/pacientes" aria-label="Pacientes"><mat-icon>groups</mat-icon></a>
-      <a class="item" routerLink="/registros" aria-label="Registros"><mat-icon>table_rows</mat-icon></a>
-      <a class="item" routerLink="/alertas" aria-label="Alertas"><mat-icon>notifications</mat-icon></a>
-      <a class="item" routerLink="/config" aria-label="Config"><mat-icon>settings</mat-icon></a>
-    </nav>
-
-    <div class="rodape-rail">
-      <a class="item" routerLink="/sobre" aria-label="Sobre"><mat-icon>help</mat-icon></a>
-    </div>
-  </aside>
-
-  <!-- Conteúdo -->
   <main class="conteudo">
     <header class="topbar">
       <div class="title-row">
-        <h2>Pacientes</h2>
-        <button type="button" class="btn-plus" (click)="abrirDialogAdicionar()" aria-label="Adicionar paciente">
+        <h2 class="title">Pacientes</h2>
+        <button
+          type="button"
+          class="btn-plus"
+          (click)="abrirDialogAdicionar()"
+          aria-label="Adicionar paciente">
           <mat-icon>add</mat-icon>
         </button>
       </div>
-      <div class="totais">{{ total() }} Pacientes</div>
+
+      <span class="totais">{{ total() }} Pacientes</span>
     </header>
 
     <div class="hairline"></div>
 
-    <!-- Filtros (versão slim do Figma) -->
+    <!-- Filtros -->
     <section class="filtros">
+      <!-- BUSCA: sem mat-label e sem floatLabel -->
       <mat-form-field appearance="outline" class="campo busca slim">
         <mat-icon matPrefix>search</mat-icon>
-        <input matInput placeholder="Buscar" [formControl]="filtros.controls.busca" />
+        <input
+          matInput
+          placeholder="Buscar"
+          [formControl]="filtros.controls.busca" />
       </mat-form-field>
 
-      <button mat-icon-button class="btn-tune" aria-label="Filtros">
-        <mat-icon>tune</mat-icon>
-      </button>
-
-      <mat-form-field appearance="outline" class="campo selecao slim">
+      <!-- SITUAÇÃO: manter o label, usar floatLabel="always" -->
+      <mat-form-field
+        appearance="outline"
+        class="campo selecao slim"
+        floatLabel="always">
         <mat-label>Situação</mat-label>
         <mat-select [formControl]="filtros.controls.situacao">
           <mat-option value="">Situação atual</mat-option>
@@ -57,7 +47,10 @@
     <!-- Grid de cards -->
     <section class="grid">
       <ng-container *ngIf="!carregando(); else carregandoTpl">
-        <app-cartao-paciente *ngFor="let p of pacientes()" [paciente]="p"></app-cartao-paciente>
+        <app-cartao-paciente
+          *ngFor="let p of pacientes()"
+          [paciente]="p">
+        </app-cartao-paciente>
 
         <div *ngIf="pacientes().length === 0" class="vazio">
           Nenhum paciente encontrado.
@@ -75,10 +68,11 @@
         <mat-icon>chevron_left</mat-icon>
       </button>
 
-      <button mat-stroked-button
-              *ngFor="let n of paginas()"
-              [class.atual]="n===paginaAtual()"
-              (click)="irPara(n)">
+      <button
+        mat-stroked-button
+        *ngFor="let n of paginas()"
+        [class.atual]="n===paginaAtual()"
+        (click)="irPara(n)">
         {{ n }}
       </button>
 

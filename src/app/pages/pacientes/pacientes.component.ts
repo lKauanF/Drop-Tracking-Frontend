@@ -20,7 +20,6 @@ import { AdicionarPacienteDialog } from './components/dialogs/adicionar-paciente
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     ReactiveFormsModule,
     MatIconModule,
     MatButtonModule,

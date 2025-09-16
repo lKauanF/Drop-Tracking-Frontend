@@ -1,0 +1,105 @@
+/* Tokens locais do Rail (se não vierem do Shell/styles.scss) */
+:host {
+  --rail: #146d60;         /* cor da pílula */
+  --rail-track-w: 56px;    /* largura da pílula */
+  --rail-top-pad: 88px;    /* espaço do 1º ícone até o topo */
+  --rail-bottom-pad: 26px; /* altura da pílula do rodapé */
+}
+
+/* ...resto do seu CSS... */
+
+.rail .menu::before,
+.rail .rodape-rail::after{
+  content: '';
+  position: absolute;
+  left: 10px; top: 0;
+  width: var(--rail-track-w);
+  height: 100%;
+  border-radius: 28px;
+  background: var(--rail, #146d60); /* <-- fallback garante cor */
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ===== Ajustes finos de espaçamento da Rail ===== */
+:host {
+  --rail-gap: 24px;            /* espaço entre logo, menu e rodapé */
+  --rail-track-w: 56px;        /* largura da “pílula” verde */
+  --rail-top-pad: 88px;        /* descola o 1º ícone do topo */
+  --rail-bottom-pad: 26px;     /* deixa a barra/rodapé mais alta */
+}
+
+/* Estrutura geral */
+.rail{
+  position: sticky; top: 0;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;  /* logo | menu | rodapé */
+  gap: 50px;
+  padding: 12px 1px;
+}
+
+/* Logo */
+.rail .logo{
+  display: grid; place-items: center;
+  margin-top: 4px;
+}
+
+/* MENU — descola do topo e mantém a pílula alinhada */
+.rail .menu{
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+
+  /* empurra a primeira opção pra baixo (descola do topo) */
+  padding: var(--rail-top-pad) 0 14px;
+}
+.rail .menu::before{
+  content: '';
+  position: absolute;
+  left: 10px; top: 0;
+  width: var(--rail-track-w); height: 100%;
+  border-radius: 28px;
+  background: var(--rail);
+  z-index: 0; pointer-events: none;
+}
+
+/* Ícones */
+.rail .item{
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  color: #eaf4f3; text-decoration: none;
+  border-radius: 12px;
+  position: relative; z-index: 1;
+}
+.rail .item:hover{ background: rgba(255,255,255,.08); }
+.rail .item.ativo{
+  background: rgba(255,255,255,.16);
+  box-shadow: 0 8px 18px rgba(20,109,96,.22), inset 0 0 0 1px rgba(255,255,255,.08);
+}
+
+/* RODAPÉ — pílula mais alta para destacar a notificação/ajuda */
+.rail .rodape-rail{
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+
+  /* engrossa a “barra” do rodapé */
+  padding: var(--rail-bottom-pad) 0;
+}
+.rail .rodape-rail::after{
+  content: '';
+  position: absolute;
+  left: 10px; top: 0;
+  width: var(--rail-track-w); height: 100%;
+  border-radius: 28px;
+  background: var(--rail);
+  z-index: 0; pointer-events: none;
+}
+
+/* (opcional) deixa o ícone do rodapé um pouquinho maior */
+.rail .rodape-rail .item{
+  width: 46px; height: 46px;   /* sutilmente maior que os de cima */
+}

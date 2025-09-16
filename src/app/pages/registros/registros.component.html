@@ -1,64 +1,73 @@
 <div class="layout">
-  <!-- Rail esquerdo simples, igual ao de Pacientes -->
-  <aside class="rail">
-    <a class="logo" routerLink="/pacientes">
-      <app-logo></app-logo>
-    </a>
-    <nav class="menu">
-      <a class="item" routerLink="/pacientes" aria-label="Pacientes"><mat-icon>groups</mat-icon></a>
-      <a class="item ativo" routerLink="/registros" aria-label="Registros"><mat-icon>table_rows</mat-icon></a>
-      <a class="item" routerLink="/alertas" aria-label="Alertas"><mat-icon>notifications</mat-icon></a>
-      <a class="item" routerLink="/config" aria-label="Config"><mat-icon>settings</mat-icon></a>
-    </nav>
-    <div class="rodape-rail">
-      <a class="item" routerLink="/sobre" aria-label="Sobre"><mat-icon>help</mat-icon></a>
-    </div>
-  </aside>
-
+  
   <main class="conteudo">
     <header class="topbar">
-      <h2>Registros</h2>
-      <div class="acoes">
-        <button mat-icon-button (click)="exportarCsv()" aria-label="Exportar CSV"><mat-icon>file_download</mat-icon></button>
-        <button mat-icon-button (click)="imprimir()" aria-label="Imprimir"><mat-icon>print</mat-icon></button>
-      </div>
-    </header>
+  <!-- coluna da esquerda: título ocupa 2 linhas -->
+  <div class="title-row">
+    <h2 class="title">Registros</h2>
 
-    <!-- Filtros -->
+    <!-- linha 2: AÇÕES (refresh + pdf) lado a lado -->
+    <div class="acoes">
+      <button
+        mat-icon-button
+        class="btn-icon"
+        (click)="refresh()"
+        [disabled]="carregando()"
+        [class.spin]="carregando()"
+        aria-label="Atualizar">
+        <mat-icon>refresh</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        class="btn-icon"
+        (click)="gerarPdf()"
+        aria-label="Baixar PDF">
+        <mat-icon>file_download</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- direita: totais na mesma linha 2 -->
+  <div class="meta-right">
+    <span class="totais">{{ total() }} Resultados</span>
+  </div>
+</header>
+<div class="hairline"></div>
+
     <section class="filtros">
-      <mat-form-field appearance="outline" class="campo">
-        <mat-label>Nome</mat-label>
-        <input matInput [formControl]="filtros.controls.nome">
-      </mat-form-field>
+  <mat-form-field appearance="outline" class="campo slim">
+    <mat-label>Nome</mat-label>
+    <input matInput [formControl]="filtros.controls.nome">
+  </mat-form-field>
 
-      <mat-form-field appearance="outline" class="campo">
-        <mat-label>Prontuário</mat-label>
-        <input matInput [formControl]="filtros.controls.prontuario">
-      </mat-form-field>
+  <mat-form-field appearance="outline" class="campo slim">
+    <mat-label>Prontuário</mat-label>
+    <input matInput [formControl]="filtros.controls.prontuario">
+  </mat-form-field>
 
-      <mat-form-field appearance="outline" class="campo">
-        <mat-label>Data de</mat-label>
-        <input matInput [matDatepicker]="dp1" [formControl]="filtros.controls.data_de">
-        <mat-datepicker #dp1></mat-datepicker>
-      </mat-form-field>
+  <mat-form-field appearance="outline" class="campo slim">
+    <mat-label>Data de</mat-label>
+    <input matInput [matDatepicker]="dp1" [formControl]="filtros.controls.data_de">
+    <mat-datepicker #dp1></mat-datepicker>
+  </mat-form-field>
 
-      <mat-form-field appearance="outline" class="campo">
-        <mat-label>Data até</mat-label>
-        <input matInput [matDatepicker]="dp2" [formControl]="filtros.controls.data_ate">
-        <mat-datepicker #dp2></mat-datepicker>
-      </mat-form-field>
+  <mat-form-field appearance="outline" class="campo slim">
+    <mat-label>Data até</mat-label>
+    <input matInput [matDatepicker]="dp2" [formControl]="filtros.controls.data_ate">
+    <mat-datepicker #dp2></mat-datepicker>
+  </mat-form-field>
 
-      <mat-form-field appearance="outline" class="campo">
-        <mat-label>ID</mat-label>
-        <input matInput [formControl]="filtros.controls.id_bomba" placeholder="Bomba 1">
-      </mat-form-field>
+  <mat-form-field appearance="outline" class="campo slim">
+    <mat-label>ID</mat-label>
+    <input matInput [formControl]="filtros.controls.id_bomba" placeholder="Bomba 1">
+  </mat-form-field>
 
-      <div class="campo acoes-filtro">
-        <button mat-stroked-button (click)="limparFiltros()">
-          Limpar
-        </button>
-      </div>
-    </section>
+  <div class="campo acoes-filtro">
+    <button mat-stroked-button (click)="limparFiltros()">Limpar</button>
+  </div>
+</section>
+
 
     <!-- Tabela -->
     <section class="tabela">
@@ -71,7 +80,7 @@
               <th>Infusão</th>
               <th>Leito</th>
               <th>Alarme</th>
-              <th>Hora de Alarme</th>
+              <th>Hora do Alarme</th>
               <th>ID</th>
               <th>Data e Hora</th>
             </tr>
@@ -111,7 +120,7 @@
 
       <button mat-stroked-button
               *ngFor="let n of paginas()"
-              [color]="n===paginaAtual() ? 'primary' : undefined"
+              [class.atual]="n===paginaAtual()"
               (click)="irPara(n)">
         {{ n }}
       </button>

@@ -3,9 +3,8 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-logo',
   standalone: true,
-  templateUrl: './logo.component.html',
-  styleUrls: ['./logo.component.scss'],
+  template: `<img [style.width.px]="size" [style.height.px]="size" src="/assets/Logo.svg" alt="Drop Tracking">`,
 })
 export class LogoComponent {
-  @Input() tamanho: 'pequeno' | 'grande' = 'pequeno';
+  @Input() size = 36; // padrão
 }

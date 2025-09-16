@@ -1,60 +1,136 @@
-.layout {
-  display: grid;
-  grid-template-columns: 76px 1fr;
-  min-height: 100dvh;
+/* ===== Tokens locais ===== */
+:host{
+  --bg:#f7faf9; --ink:#0f2a2e; --muted:#6b7a80;
+  --primary:#46b39c; --primary-600:#3aa089; --line:#e9eff1; --card:#fff;
+  --shadow:0 10px 24px rgba(16,24,40,.08);
+  --h-topbar:40px; --fs-title:16px; --rad-field:8px;
+  --w-search:420px; --w-date:200px;
 }
 
-/* Rail igual ao de Pacientes */
-.rail {
-  background: #0f6a59;
-  color: #fff;
+/* ===== Conteúdo do Shell ===== */
+.conteudo{ max-width:1280px; width:100%; padding:16px 28px 28px; margin:0 auto; }
+
+/* Topbar em 2 linhas (como Pacientes): título (linha 1) | ações & totais (linha 2) */
+.topbar{
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr auto;   /* esq: título (+ ações) | dir: totais */
+  grid-template-rows: auto auto;     /* linha 1: título | linha 2: ações/totais */
+  column-gap: 16px;
   align-items: start;
-  justify-items: center;
-  padding: 14px 8px;
-
-  .logo { margin: 4px 0 12px; display: inline-flex; }
-  .menu, .rodape-rail { display: grid; gap: 10px; }
-  .item {
-    width: 44px; height: 44px; border-radius: 12px;
-    display: grid; place-items: center; color: #d1fae5; text-decoration: none;
-  }
-  .item:hover { background: rgba(255,255,255,.08); }
-  .item.ativo { background: rgba(255,255,255,.16); }
 }
 
-.conteudo { padding: 22px 24px; }
-
-.topbar {
-  display: grid; grid-template-columns: 1fr auto; align-items: center; margin-bottom: 14px;
-  h2 { margin: 0; font-size: 20px; font-weight: 700; color: #1f2937; }
-  .acoes { display: flex; align-items: center; gap: 8px; }
-}
-
-/* Filtros */
-.filtros {
+/* título ocupa as 2 linhas; dentro dele a .acoes fica na linha 2 */
+.title-row{
+  grid-column: 1 / 2;
+  grid-row: 1 / span 2;
   display: grid;
-  grid-template-columns: repeat(5, minmax(160px, 1fr)) 120px;
-  gap: 12px;
-  margin: 8px 0 14px;
-
-  .campo { width: 100%; }
-  .acoes-filtro { display: flex; align-items: end; }
+  grid-template-rows: auto auto;
+  row-gap: 73px;
+  align-content: start;
 }
 
-/* Tabela */
-.tabela .wrap { overflow: auto; border-radius: 10px; border: 1px solid #e5e7eb; background: #fff; }
-.tabela table { width: 100%; border-collapse: collapse; min-width: 880px; }
-.tabela th, .tabela td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #374151; }
-.tabela th { background: #f8fafc; text-align: left; font-weight: 600; color: #1f2937; }
+.title{ margin: 0; font-size: var(--fs-title); font-weight: 700; color: #0f2a2e; }
 
-.vazio { text-align: center; color: #6b7280; padding: 18px; }
+/* ações lado a lado, na linha 2, alinhadas */
+.acoes{
+  grid-row: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
 
-/* Tag de alarme */
-.tag { display: inline-block; padding: 4px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
-.tag.baixa { background: #e8f7ef; color: #0f8f63; }
-.tag.alta  { background: #ffe9e4; color: #d44124; }
+/* Registros (ou a página onde está a topbar + filtros) */
+.topbar{
+  /* ...seu grid... */
+  margin-bottom: 16px;   /* era ~8–12; aumente pra 16–20 */
+}
 
-/* Paginação */
-.paginacao { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 14px 0 8px; }
+.filtros{
+  margin-top: 6px;       /* um respiro extra acima dos campos */
+}
+
+/* totais também na linha 2, colado à direita */
+.meta-right{
+  grid-column: 2 / 3;
+  grid-row: 2;
+  align-self: center;
+}
+
+.totais{ font-size: 12px; color: var(--muted); }
+
+/* botões “pílula” iguais aos demais */
+.btn-icon{
+  width: 28px; height: 28px; border-radius: 8px; border: 0;
+  display: grid; place-items: center; cursor: pointer;
+  color: #0f2a2e; background: #f1f6f5;
+  box-shadow: 0 4px 12px rgba(16,24,40,.06);
+}
+.btn-icon .mat-icon{ width: 18px; height: 18px; font-size: 18px; line-height: 18px; }
+.btn-icon:hover{ filter: brightness(.98); }
+
+/* animação de carregando no refresh */
+@keyframes spin { to { transform: rotate(360deg); } }
+.btn-icon.spin .mat-icon{ animation: spin 1s linear infinite; }
+
+/* ===== Filtros (slim) ===== */
+.filtros{
+  display:grid; gap:10px;
+  grid-template-columns:
+    minmax(220px,var(--w-search)) /* Nome */
+    minmax(160px,260px)           /* Prontuário */
+    var(--w-date)                 /* De */
+    var(--w-date)                 /* Até */
+    160px                         /* ID */
+    auto;                         /* Limpar */
+}
+
+/* Angular Material overrides (apenas .slim) */
+:host ::ng-deep .campo.slim .mat-mdc-text-field-wrapper{
+  height:50px; border-radius:var(--rad-field) !important; background:#eef4f6; padding-right:6px;
+}
+:host ::ng-deep .campo.slim .mdc-notched-outline__leading,
+:host ::ng-deep .campo.slim .mdc-notched-outline__trailing,
+:host ::ng-deep .campo.slim .mdc-notched-outline__notch{ border-color:#e2e9ec !important; border-radius:var(--rad-field); }
+:host ::ng-deep .campo.slim .mat-mdc-form-field-icon-prefix,
+:host ::ng-deep .campo.slim .mat-mdc-form-field-icon-suffix{ color:#90a4aa; }
+:host ::ng-deep .campo.slim .mdc-text-field__input::placeholder{ color:#90a4aa; }
+:host ::ng-deep .campo.slim .mdc-text-field__input,
+:host ::ng-deep .campo.slim .mat-mdc-select-value{ font-size:14px; line-height:36px; }
+
+/* ===== Tabela ===== */
+.tabela .wrap{
+  background:var(--card); border:1px solid #e7eeec; border-radius:14px; box-shadow:var(--shadow); overflow:auto;
+}
+table{ width:100%; border-collapse:separate; border-spacing:0; }
+thead th{
+  position:sticky; top:0; z-index:1; background:#f3f6f6; color:#092b2f;
+  font-weight:600; font-size:12px; text-align:left; padding:12px; border-bottom:1px solid #e3e8ea;
+}
+tbody td{ padding:12px; font-size:13px; color:#0f2a2e; border-bottom:1px solid #eef2f4; }
+tbody tr:nth-child(odd) td{ background:#fbfdfc; }
+tbody tr:hover td{ background:#f7fbfa; }
+.vazio{ text-align:center; color:var(--muted); padding:22px; }
+
+/* tag de alarme */
+.tag{
+  display:inline-block; min-width:64px; text-align:center; padding:3px 8px; border-radius:999px;
+  font-size:12px; font-weight:600; background:#e9eef1; color:#0f2a2e;
+}
+.tag.alta{ background:#fee4e2; color:#b42318; }
+.tag.baixa{ background:#e8f6ff; color:#084c7f; }
+
+/* ===== Paginação ===== */
+.paginacao{
+  margin:12px auto 6px; display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.paginacao button.mat-mdc-stroked-button{ min-width:36px; height:36px; padding:0 10px; border-radius:8px; }
+.paginacao .atual{ border-color:var(--primary) !important; color:var(--primary); }
+
+/* ===== Responsivo ===== */
+@media (max-width:1100px){
+  .filtros{ grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto; }
+}
+@media (max-width:800px){
+  .filtros{ grid-template-columns: 1fr 1fr; }
+  .totais{ display:none; }
+}
