@@ -27,11 +27,15 @@ import { MatIconModule } from '@angular/material/icon';
         <a class="item" routerLink="/config" routerLinkActive="ativo" aria-label="Configurações">
           <mat-icon>settings</mat-icon>
         </a>
+        <a class="item" routerLink="/sobre" routerLinkActive="ativo" aria-label="Sobre">
+          <mat-icon>help</mat-icon>
+        </a>
+
       </nav>
 
       <div class="rodape-rail">
-        <a class="item" routerLink="/sobre" routerLinkActive="ativo" aria-label="Sobre">
-          <mat-icon>help</mat-icon>
+        <a class="item" routerLink="/sair" routerLinkActive="ativo" aria-label="sair">
+          <mat-icon>logout</mat-icon>
         </a>
       </div>
     </aside>

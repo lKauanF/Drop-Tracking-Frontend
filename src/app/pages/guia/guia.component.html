@@ -1,0 +1,116 @@
+<main class="conteudo guia">
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="title-row">
+      <h2 class="title">Guia do Usuário</h2>
+    </div>
+  </header>
+
+  <div class="hairline"></div>
+
+  <!-- Hero -->
+  <section class="card hero">
+    <div class="hero__text">
+      <h3>Bem-vindo ao Drop Tracking</h3>
+      <p>Este guia rápido mostra como cadastrar pacientes, acompanhar infusões e exportar registros — tudo no mesmo lugar.</p>
+      <div class="toc">
+        <a href="#inicio-rapido" class="toc__btn"><mat-icon>bolt</mat-icon>Início Rápido</a>
+        <a href="#pacientes" class="toc__btn"><mat-icon>groups</mat-icon>Pacientes</a>
+        <a href="#registros" class="toc__btn"><mat-icon>table_rows</mat-icon>Registros</a>
+        <a href="#faq" class="toc__btn"><mat-icon>help</mat-icon>FAQ</a>
+      </div>
+    </div>
+    <div class="hero__illu" aria-hidden="true">
+      <mat-icon>medical_information</mat-icon>
+    </div>
+  </section>
+
+  <!-- Início rápido -->
+  <section id="inicio-rapido" class="card grid-2">
+    <div>
+      <h4 class="card__title"><mat-icon>bolt</mat-icon> Início rápido</h4>
+      <ol class="steps">
+        <li>
+          <span class="num">1</span>
+          Clique em <b>Pacientes</b> na barra lateral.
+        </li>
+        <li>
+          <span class="num">2</span>
+          Pressione o botão <b>“+”</b> ao lado do título e preencha <i>Nome</i>, <i>Prontuário</i> e <i>Leito</i>.
+        </li>
+        <li>
+          <span class="num">3</span>
+          Use a <b>busca</b> e o <b>filtro de situação</b> para localizar rapidamente.
+        </li>
+        <li>
+          <span class="num">4</span>
+          Vá em <b>Registros</b> para consultar o histórico e <b>exportar</b> (CSV/PDF).
+        </li>
+      </ol>
+    </div>
+
+    <aside class="callout">
+      <mat-icon>info</mat-icon>
+      <div>
+        <b>Dica:</b> se algo parecer desatualizado, use o botão de <i>refresh</i> na tela de Registros ou
+        recarregue a página (Ctrl/Cmd + R).
+      </div>
+    </aside>
+  </section>
+
+  <!-- Pacientes -->
+  <section id="pacientes" class="card">
+    <h4 class="card__title"><mat-icon>groups</mat-icon> Pacientes</h4>
+    <ul class="list">
+      <li><b>Adicionar:</b> botão “+” ao lado do título <i>Pacientes</i>.</li>
+      <li><b>Buscar/Filtrar:</b> campo de busca à esquerda e seletor de <i>Situação</i> à direita.</li>
+      <li><b>Cartões:</b> mostram situação da infusão, taxa e alerta (alto/oclusão/normal).</li>
+      <li><b>Ações:</b> menu “kebab” (⋮) no canto do cartão para ver registros, editar ou remover.</li>
+    </ul>
+  </section>
+
+  <!-- Registros -->
+  <section id="registros" class="card">
+    <h4 class="card__title"><mat-icon>table_rows</mat-icon> Registros</h4>
+    <ul class="list">
+      <li>Filtros por <i>Nome</i>, <i>Prontuário</i>, <i>Período</i> e <i>ID da bomba</i>.</li>
+      <li>Clique em <b>Atualizar</b> para recarregar o histórico.</li>
+      <li>Use <b>Exportar</b> para baixar CSV ou <b>PDF</b> com logotipo, descrição e rodapé.</li>
+      <li>Cabeçalho da tabela é “grudado” (sticky) para facilitar a navegação.</li>
+    </ul>
+  </section>
+
+  <!-- Em breve -->
+  <section class="card coming">
+    <h4 class="card__title"><mat-icon>new_releases</mat-icon> Em breve</h4>
+    <p><b>Notificações</b> e <b>Configurações</b> ganharão recursos novos nas próximas versões.
+       Obrigado por acompanhar! 💚</p>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="card">
+    <h4 class="card__title"><mat-icon>help</mat-icon> Perguntas frequentes</h4>
+
+    <mat-accordion class="faq">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header><span>Como adiciono um paciente?</span></mat-expansion-panel-header>
+        <p>Na tela <b>Pacientes</b>, clique em <b>“+”</b>, preencha os campos e confirme em <b>Adicionar</b>.</p>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header><span>Como exporto os registros?</span></mat-expansion-panel-header>
+        <p>Na tela <b>Registros</b>, aplique os filtros desejados e use o botão de <b>exportação</b> (CSV/PDF).</p>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header><span>Os filtros não surtiram efeito, e agora?</span></mat-expansion-panel-header>
+        <p>Use o botão <b>Atualizar</b> (ao lado do exportar) ou recarregue a página.
+           Se persistir, limpe o cache (Ctrl/Cmd + Shift + R).</p>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </section>
+
+  <footer class="foot-note">
+    Precisa de algo específico? <a routerLink="/pacientes">Fale com o time</a> pelo canal combinado.
+  </footer>
+</main>
