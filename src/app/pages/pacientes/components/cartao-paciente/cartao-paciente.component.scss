@@ -48,7 +48,7 @@
 .titulos{
   min-width: 0;
   display: grid;
-  gap: 2px;
+  gap: 6px;
 }
 
 .nome{
@@ -158,6 +158,15 @@
   background: var(--alert-100);
   border: 1px solid rgba(239,68,68,.25);
 }
+/* …seu SCSS exatamente como enviou… */
+
+/* (opcional) área de clique maior no kebab */
+.kebab { margin-top: -4px; }
+
+/* (opcional) melhora de foco acessível */
+.card:focus-within { outline: 2px solid rgba(70,179,156,.35); outline-offset: 2px; }
+
+
 
 /* ====== Responsivo fino ====== */
 @media (max-width: 620px){

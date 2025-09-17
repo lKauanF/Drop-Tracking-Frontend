@@ -57,14 +57,51 @@ export class PacientesComponent implements OnInit {
     const pages = Math.max(1, Math.ceil(count / this.tamanhoPagina));
     return Array.from({ length: pages }, (_, i) => i + 1);
   });
+  
+onEditar(p: Paciente) {
+  const ref = this.dialog.open(AdicionarPacienteDialog, {
+    data: p,
+    disableClose: true,
+    panelClass: 'dlg--paciente',
+    backdropClass: 'backdrop--blur',
+    autoFocus: false,
+  });
 
-  ngOnInit() {
+  ref.afterClosed().subscribe((editado: Paciente | null) => {
+    if (!editado) return;
+    this.pacientes.update(list => list.map(x => x.id === editado.id ? editado : x));
+    this.snackbar.open('Paciente atualizado!', undefined, { duration: 2000 });
+    this.carregar(); // garante sincronismo com o backend
+  });
+}
+
+onRemover(p: Paciente) {
+  if (!confirm(`Remover paciente “${p.nome}”?`)) return;
+
+  const anterior = this.pacientes();
+  this.pacientes.update(list => list.filter(x => x.id !== p.id));
+  this.total.update(t => Math.max(0, t - 1));
+
+  this.pacientesService.remover(p.id).subscribe({
+    next: () => this.snackbar.open('Paciente removido!', undefined, { duration: 1800 }),
+    error: () => {
+      this.pacientes.set(anterior);
+      this.total.update(t => t + 1);
+      this.snackbar.open('Falha ao remover. Tente novamente.', undefined, { duration: 2200 });
+    }
+  });
+}
+
+ ngOnInit() {
+  // DEV: preencher cards de exemplo
+  (this.pacientesService as any).seed?.(8);
+
+  this.carregar();
+  this.filtros.valueChanges.subscribe(() => {
+    this.paginaAtual.set(1);
     this.carregar();
-    this.filtros.valueChanges.subscribe(() => {
-      this.paginaAtual.set(1);
-      this.carregar();
-    });
-  }
+  });
+}
 
   carregar() {
     this.carregando.set(true);
@@ -88,34 +125,34 @@ export class PacientesComponent implements OnInit {
     });
   }
 
-  abrirDialogAdicionar() {
-  const ref = this.dialog.open(AdicionarPacienteDialog, {
-    disableClose: true,
-    panelClass: 'dlg--paciente',
-    backdropClass: 'backdrop--blur',
-  });
+   abrirDialogAdicionar() {
+    const ref = this.dialog.open(AdicionarPacienteDialog, {
+      disableClose: true,
+      panelClass: 'dlg--paciente',
+      backdropClass: 'backdrop--blur',
+      autoFocus: false,
+    });
 
-  ref.afterClosed().subscribe((pac: Paciente | null) => {
-    if (pac) {
-      // UPDATE OTIMISTA: mostra o card na hora
-      this.pacientes.update(list => [pac, ...list]);
+    ref.afterClosed().subscribe((pac: Paciente | null) => {
+      if (!pac) return;
+
+      const padrao: Partial<Paciente> = { situacao: 'em_andamento', alerta: 'normal' };
+      const novo = { ...padrao, ...pac } as Paciente;
+
+      this.paginaAtual.set(1);                // garante que você verá o novo
+      this.pacientes.update(list => [novo, ...list]);
       this.total.update(t => t + 1);
       this.snackbar.open('Paciente adicionado!', undefined, { duration: 2000 });
 
-      // Se preferir garantir que veio do backend com todos os campos:
-      this.carregar(); // pode manter ou remover (otimista puro)
-    }
-  });
+      this.carregar();                        // sincroniza com o backend
+    });
   }
 
-  irPara(pagina: number) {
-  const total = this.paginas().length;
-  const alvo = Math.max(1, Math.min(total, pagina)); // evita sair do range
-  if (alvo === this.paginaAtual()) return;
-  this.paginaAtual.set(alvo);
-  this.carregar();
-}
-
-
-
+  public irPara = (pagina: number) => {
+    const total = this.paginas().length;
+    const alvo = Math.max(1, Math.min(total, pagina));
+    if (alvo === this.paginaAtual()) return;
+    this.paginaAtual.set(alvo);
+    this.carregar();
+  };
 }

@@ -37,9 +37,10 @@ export const routes: Routes = [
          loadComponent: () => import('./shared/coming-soon/coming-soon.component').then(m => m.ComingSoonComponent),
          data: { title: 'Configurações', subtitle: 'Em breve…', icon: 'settings' } },
 
-       { path: 'sobre', loadComponent: () => import('./pages/guia/guia.component').then(m => m.GuiaComponent) },
+      { path: 'sobre', loadComponent: () => import('./pages/guia/guia.component').then(m => m.GuiaComponent) },
 
-        { path: 'sair', loadComponent: () => import('./pages/auth/login/login.component' ).then(m => m.LoginComponent) },
+      { path: 'sair', loadComponent: () => import('./pages/auth/login/login.component' ).then(m => m.LoginComponent) },
+
     ]
   },
 

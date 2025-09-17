@@ -103,3 +103,69 @@
 .rail .rodape-rail .item{
   width: 46px; height: 46px;   /* sutilmente maior que os de cima */
 }
+
+/* =========================
+   RAIL — MOBILE REFINADO
+   (substitui o estilo mobile antigo)
+========================= */
+@media (max-width: 768px){
+  /* layout em 1 coluna; rail fica no topo */
+  .layout{ grid-template-columns: 1fr; }
+
+  .rail{
+    position: sticky; top: 0; z-index: 30;
+    height: auto;
+    /* respiro e safe-area */
+    padding: calc(8px + env(safe-area-inset-top, 0)) 14px 10px;
+    background: transparent;              /* sem “faixa” verde no fundo */
+    display: grid;
+    grid-template-columns: auto 1fr auto; /* logo | menu | sair */
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* logo discreta, sem sombra pesada */
+  .rail .logo{ margin-top: 0; display: grid; place-items: center; }
+  .rail .logo img,
+  .rail .logo app-logo{
+    width: 36px; height: 36px;
+    filter: drop-shadow(0 4px 10px rgba(16,24,40,.08));
+  }
+
+  /* pílula flutuante centrada, compacta */
+  .rail .menu{
+    justify-self: center;
+    display: inline-flex; align-items: center; gap: 14px;
+    padding: 6px 12px;                     /* altura baixa */
+    background: var(--rail, #146d60);
+    border-radius: 999px;
+    box-shadow: 0 6px 14px rgba(20,109,96,.18);
+  }
+
+  /* desliga os trilhos verticais do desktop */
+  .rail .menu::before,
+  .rail .rodape-rail::after{ display: none !important; }
+
+  /* ícones — tamanho uniforme e melhores estados */
+  .rail .item{
+    width: 36px; height: 36px;
+    display: grid; place-items: center;
+    color: #eaf4f3;
+    border-radius: 10px;
+    transition: background .15s ease, filter .15s ease, transform .15s ease;
+  }
+  .rail .item:hover{ background: rgba(255,255,255,.10); }
+  .rail .item.ativo{ background: rgba(255,255,255,.18); }
+
+  /* botão “sair” separado à direita, invertendo as cores pra diferenciar */
+  .rail .rodape-rail{ display: flex; justify-content: flex-end; }
+  .rail .rodape-rail .item{
+    width: 36px; height: 36px;
+    background: #eaf4f3;
+    color: var(--rail, #146d60);
+    border-radius: 10px;
+  }
+
+  /* dá um respiro no conteúdo sob a barra */
+  .conteudo{ padding-top: 10px; }
+}

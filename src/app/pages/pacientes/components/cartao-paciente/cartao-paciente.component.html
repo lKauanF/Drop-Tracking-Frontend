@@ -11,13 +11,13 @@
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item [routerLink]="['/registros']">
-        <mat-icon>list_alt</mat-icon><span>Ver registros</span>
-      </button>
-      <button mat-menu-item>
+      <button mat-menu-item (click)="verRegistros($event)">
+  <mat-icon>list_alt</mat-icon><span>Ver registros</span>
+</button>
+      <button mat-menu-item (click)="editar.emit(paciente)">
         <mat-icon>edit</mat-icon><span>Editar</span>
       </button>
-      <button mat-menu-item>
+      <button mat-menu-item (click)="remover.emit(paciente)">
         <mat-icon>delete</mat-icon><span>Remover</span>
       </button>
     </mat-menu>
@@ -32,7 +32,7 @@
 
     <div class="linha">
       <span class="label">Infusão</span>
-      <b class="valor">{{ paciente.infusao_taxa || '—' }}</b>
+      <b class="valor">{{ infusaoFormatada }}</b>
     </div>
   </div>
 

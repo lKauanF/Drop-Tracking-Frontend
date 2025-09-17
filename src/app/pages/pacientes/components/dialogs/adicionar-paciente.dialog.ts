@@ -119,16 +119,26 @@ export class AdicionarPacienteDialog {
   fechar() { this.ref.close(null); }
 
   salvar() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    this.carregando = true;
-    const v = this.form.getRawValue();
-    this.pacientesService.criar(v as any).subscribe({
-      next: (pac: Paciente) => this.ref.close(pac),
-      error: () => { this.carregando = false; },
-    });
-  }
+  if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+  this.carregando = true;
+
+  const v = this.form.getRawValue();
+  // valores padrão mínimos para o card
+  const payload = {
+    nome: v.nome!.trim(),
+    prontuario: v.prontuario!,
+    leito: v.leito!,
+    bomba_id: v.bomba_id || '',
+    // padrões que o card depende
+    situacao: 'em_andamento',
+    alerta: 'normal',
+    infusao_taxa: null,
+  };
+
+  this.pacientesService.criar(payload as any).subscribe({
+    next: (pac: Paciente) => this.ref.close(pac), // << devolve um Paciente completo
+    error: () => (this.carregando = false),
+  });
+}
   
 }
