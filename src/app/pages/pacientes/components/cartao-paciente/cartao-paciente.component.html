@@ -20,6 +20,9 @@
       <button mat-menu-item (click)="remover.emit(paciente)">
         <mat-icon>delete</mat-icon><span>Remover</span>
       </button>
+      <button mat-menu-item (click)="verRegistros($event)">
+  <mat-icon>alarm</mat-icon><span>Desativar Alarme</span>
+</button>
     </mat-menu>
   </header>
 

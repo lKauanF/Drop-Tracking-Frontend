@@ -12,8 +12,13 @@ export const routes: Routes = [
   { path: 'cadastro', loadComponent: () =>
       import('./pages/auth/cadastro/cadastro.component').then(m => m.cadastroComponent) },
 
-  { path: 'recuperar-senha', component: PlaceholderComponent,
-    data: { titulo: 'Recuperar senha (em breve)' } },
+  {
+  path: 'recuperar-senha',
+  loadComponent: () =>
+    import('./pages/auth/recuperar-senha/recuperar-senha.component')
+      .then(m => m.RecuperarSenhaComponent)
+},
+
 
   // ========= ÁREA LOGADA (com Shell) =========
   {
@@ -40,6 +45,8 @@ export const routes: Routes = [
       { path: 'sobre', loadComponent: () => import('./pages/guia/guia.component').then(m => m.GuiaComponent) },
 
       { path: 'sair', loadComponent: () => import('./pages/auth/login/login.component' ).then(m => m.LoginComponent) },
+
+    
 
     ]
   },

@@ -65,7 +65,7 @@
       <li><b>Adicionar:</b> botão “+” ao lado do título <i>Pacientes</i>.</li>
       <li><b>Buscar/Filtrar:</b> campo de busca à esquerda e seletor de <i>Situação</i> à direita.</li>
       <li><b>Cartões:</b> mostram situação da infusão, taxa e alerta (alto/oclusão/normal).</li>
-      <li><b>Ações:</b> menu “kebab” (⋮) no canto do cartão para ver registros, editar ou remover.</li>
+      <li><b>Ações:</b> menu “kebab” (⋮) no canto do cartão para ver registros, editar, remover ou silência alarme.</li>
     </ul>
   </section>
 
@@ -111,6 +111,11 @@
   </section>
 
   <footer class="foot-note">
-    Precisa de algo específico? <a routerLink="/pacientes">Fale com o time</a> pelo canal combinado.
+    Precisa de algo específico?
+    <button mat-stroked-button color="primary" (click)="abrirSuporte()">
+      <mat-icon>headset_mic</mat-icon>
+      Falar com o time
+    </button>
+    pelo canal combinado.
   </footer>
 </main>
