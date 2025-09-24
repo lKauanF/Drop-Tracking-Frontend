@@ -88,76 +88,7 @@
 
 /* ===== Mobile ===== */
 
-@media (max-width: 640px){
-
-  /* 1) Layout com rail + conteúdo (sem comer largura) */
-  .layout{
-    display:grid;
-    grid-template-columns: 64px minmax(0,1fr); /* rail | conteúdo */
-  }
-  .rail{ width:64px; min-width:64px; }
-
-  /* 2) Conteúdo realmente 100% do espaço útil */
-  .conteudo{
-    max-width:100%;
-    width:100%;
-    padding:12px;            /* padding compacto */
-    box-sizing:border-box;
-    overflow-x:visible;
-  }
-
-  /* 3) Topbar enxuta */
-  .topbar{
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    row-gap:6px;
-    margin-bottom:10px;
-  }
- 
- 
-  /* 4) Filtros: 1 coluna CHEIA (sem largura fixa) */
-  .filtros{
-    display:grid;
-    grid-template-columns: 1fr !important;
-    gap:8px;
-    margin-top:6px;
-  }
-
-  /* Garanta 100% em todos os níveis do Angular Material */
-  .filtros .campo{ width:100%; }
-  :host ::ng-deep .campo .mat-mdc-form-field,
-  :host ::ng-deep .campo.slim .mat-mdc-form-field{ width:100% !important; }
-  :host ::ng-deep .campo.slim .mat-mdc-text-field-wrapper{
-    width:100% !important;
-    height:48px;
-  }
-  :host ::ng-deep .campo.slim .mdc-text-field__input,
-  :host ::ng-deep .campo.slim .mat-mdc-select-value{
-    font-size:13px; line-height:32px;
-  }
-
-  /* Botão (tune/lupa) não atrapalha a largura */
-  .btn-tune{ width:36px; height:36px; justify-self:start; }
-
-  /* 5) Grid de cards: 1 por linha, 100% */
-  .grid{
-    grid-template-columns: 1fr !important;
-    gap:12px;
-    margin-top:10px;
-  }
-
-  /* 6) Higiene: nada estoura a viewport */
-  html, body{ overflow-x:hidden; }
-  *,*::before,*::after{ box-sizing:border-box; }
+@media (max-width:640px){
+  .filtros{ grid-template-columns: 1fr 36px minmax(140px,45%); column-gap:8px; }
+  .totais{ display:none; }
 }
-
-  /* (opcional) alinhar visualmente com os mat-form-field */
-  .conteudo{ padding-inline: 12px; }      /* mesmo recuo dos filtros */
-  app-cartao-paciente .card,
-  app-cartao-paciente ::ng-deep .card{
-    padding-inline: 56px;                 /* bordas similares ao input */
-    border-radius: 12px;
-  }
-
-  
-
