@@ -106,66 +106,96 @@
 
 /* =========================
    RAIL — MOBILE REFINADO
-   (substitui o estilo mobile antigo)
+  
 ========================= */
 @media (max-width: 768px){
-  /* layout em 1 coluna; rail fica no topo */
-  .layout{ grid-template-columns: 1fr; }
+  /* Layout com rail fixa à esquerda e conteúdo ao lado */
+  .layout{
+    display: grid;
+    grid-template-columns: 88px 1fr; /* ~ largura da rail */
+    gap: 0;
+  }
 
+  /* Rail grudada à esquerda, ocupando a altura toda */
   .rail{
     position: sticky; top: 0; z-index: 30;
-    height: auto;
-    /* respiro e safe-area */
-    padding: calc(8px + env(safe-area-inset-top, 0)) 14px 10px;
-    background: transparent;              /* sem “faixa” verde no fundo */
+    height: 100dvh;
+    background: transparent;
     display: grid;
-    grid-template-columns: auto 1fr auto; /* logo | menu | sair */
-    align-items: center;
-    gap: 10px;
+    grid-template-rows: auto 1fr auto; /* logo | menu | rodapé */
+    gap: var(--rail-gap, 24px);
+    padding: 12px 1px;
   }
 
-  /* logo discreta, sem sombra pesada */
-  .rail .logo{ margin-top: 0; display: grid; place-items: center; }
-  .rail .logo img,
-  .rail .logo app-logo{
-    width: 36px; height: 36px;
-    filter: drop-shadow(0 4px 10px rgba(16,24,40,.08));
+  /* Logo centralizada */
+  .rail .logo{
+    display: grid; place-items: center;
+    margin-top: 4px;
   }
 
-  /* pílula flutuante centrada, compacta */
+  /* MENU em coluna, com “pílula” vertical ligada */
   .rail .menu{
-    justify-self: center;
-    display: inline-flex; align-items: center; gap: 14px;
-    padding: 6px 12px;                     /* altura baixa */
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    padding: var(--rail-top-pad, 88px) 0 14px;
+    background: transparent;            /* remove pílula horizontal */
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .rail .menu::before{
+    content: '';
+    position: absolute;
+    left: 10px; top: 0;
+    width: var(--rail-track-w, 56px);
+    height: 100%;
+    border-radius: 28px;
     background: var(--rail, #146d60);
-    border-radius: 999px;
-    box-shadow: 0 6px 14px rgba(20,109,96,.18);
+    z-index: 0; pointer-events: none;
+    display: block;
   }
 
-  /* desliga os trilhos verticais do desktop */
-  .rail .menu::before,
-  .rail .rodape-rail::after{ display: none !important; }
-
-  /* ícones — tamanho uniforme e melhores estados */
+  /* Ícones */
   .rail .item{
-    width: 36px; height: 36px;
+    width: 44px; height: 44px;
     display: grid; place-items: center;
     color: #eaf4f3;
-    border-radius: 10px;
-    transition: background .15s ease, filter .15s ease, transform .15s ease;
+    border-radius: 12px;
+    position: relative; z-index: 1;
+    transition: background .15s ease;
   }
-  .rail .item:hover{ background: rgba(255,255,255,.10); }
-  .rail .item.ativo{ background: rgba(255,255,255,.18); }
+  .rail .item:hover{ background: rgba(255,255,255,.08); }
+  .rail .item.ativo{
+    background: rgba(255,255,255,.16);
+    box-shadow: 0 8px 18px rgba(20,109,96,.22), inset 0 0 0 1px rgba(255,255,255,.08);
+  }
 
-  /* botão “sair” separado à direita, invertendo as cores pra diferenciar */
-  .rail .rodape-rail{ display: flex; justify-content: flex-end; }
+  /* Rodapé mantém a “pílula” vertical */
+  .rail .rodape-rail{
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    padding: var(--rail-bottom-pad, 26px) 0;
+  }
+  .rail .rodape-rail::after{
+    content: '';
+    position: absolute;
+    left: 10px; top: 0;
+    width: var(--rail-track-w, 56px);
+    height: 100%;
+    border-radius: 28px;
+    background: var(--rail, #146d60);
+    z-index: 0; pointer-events: none;
+    display: block;
+  }
   .rail .rodape-rail .item{
-    width: 36px; height: 36px;
-    background: #eaf4f3;
-    color: var(--rail, #146d60);
-    border-radius: 10px;
+    width: 46px; height: 46px; /* sutil destaque */
+    background: transparent;
+    color: #eaf4f3;
   }
 
-  /* dá um respiro no conteúdo sob a barra */
-  .conteudo{ padding-top: 10px; }
+  /* Conteúdo não precisa “descer” por uma barra superior */
+  .conteudo{ padding-top: 0; }
 }

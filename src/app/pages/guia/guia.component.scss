@@ -84,8 +84,10 @@
 .foot-note a{ color:var(--primary); text-decoration: none; }
 .foot-note a:hover{ text-decoration: underline; }
 
-/* Responsivo */
+
+/* ===== Responsividade ===== */
 @media (max-width: 800px){
-  .conteudo{ padding-inline:16px; }
+  .conteudo{ padding-inline:1px; }
   .grid-2{ grid-template-columns: 1fr; }
 }
+

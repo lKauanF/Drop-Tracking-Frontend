@@ -97,10 +97,58 @@ import { PacientesService, Paciente } from '../../../../core/services/pacientes.
       box-shadow: 0 0 0 3px #e6f6f2 inset; /* glow verdinho */
     }
 
-    /* responsivo */
-    @media (max-width: 560px){
-      .linha{ grid-template-columns: 1fr; }
-    }
+    /* ====== Dialog responsivo e seguro ====== */
+
+/* Faz a superfície do MatDialog caber na viewport */
+:host ::ng-deep .mat-mdc-dialog-surface{
+  max-width: 100vw !important;
+  width: min(560px, calc(100vw - 24px)) !important; /* 12px de margem por lado */
+  border-radius: 16px;
+}
+
+/* Remove paddings internos excessivos do container nativo (opcional) */
+:host ::ng-deep .mat-mdc-dialog-content{ padding: 0; }
+
+/* Form sempre 100% da largura útil */
+.dialog-form{ width: 100%; max-width: 560px; }
+
+/* Campos do Angular Material ocupam 100% */
+.campo.mat-mdc-form-field{ width: 100%; }
+
+/* ====== Quebras por largura ====== */
+
+/* Tablet/telefone grande: já empilha se faltar espaço */
+@media (max-width: 720px){
+  .dlg-title{ padding: 16px 18px 6px; font-size: 17px; }
+  .dlg-content{ padding: 8px 18px 14px; }
+}
+
+/* Principal: empilha Prontuário/Leito abaixo de ~560px */
+@media (max-width: 560px){
+  .linha{ grid-template-columns: 1fr; gap: 10px; }
+  .btn-ghost, .btn-primary{ height: 40px; }
+}
+
+/* Telefones pequenos */
+@media (max-width: 400px){
+  :host ::ng-deep .mat-mdc-dialog-surface{
+    width: calc(100vw - 16px) !important; /* mais respiro */
+  }
+  .dlg-title{ padding: 14px 14px 4px; font-size: 16px; }
+  .dlg-content{ padding: 6px 14px 12px; }
+  .campo.slim .mat-mdc-text-field-wrapper{ height: 42px; }
+  .campo.slim .mdc-text-field__input{ height: 42px; line-height: 42px; }
+}
+
+/* Ações sempre visíveis em telas baixas (opcional mas útil) */
+.dlg-actions{
+  position: sticky;
+  bottom: 0;
+  padding-top: 8px;
+  background: linear-gradient(to top, #fff, rgba(255,255,255,0));
+  display: flex; justify-content: flex-end; gap: 12px; margin-top: 6px;
+}
+
   `]
 })
 export class AdicionarPacienteDialog {

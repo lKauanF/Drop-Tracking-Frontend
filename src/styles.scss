@@ -48,3 +48,19 @@ body {
   text-decoration: none;
 }
 .link-sutil:hover { text-decoration: underline; }
+
+/* Evita que QUALQUER coisa force scroll lateral no mobile */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  overflow-x: hidden;           /* mata scroll lateral */
+  max-width: 100%;
+}
+
+img, svg, canvas, video { max-width: 100%; height: auto; }
+
+/* Em containers de flex/grid, o conteúdo pode encolher */
+[style*="display:flex"], [style*="display:grid"] { min-width: 0; }
+
+
+

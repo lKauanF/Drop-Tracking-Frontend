@@ -127,11 +127,63 @@ tbody tr:hover td{ background:#f7fbfa; }
 .paginacao .atual{ border-color:var(--primary) !important; color:var(--primary); }
 
 /* ===== Responsivo ===== */
-@media (max-width:1100px){
-  .filtros{ grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto; }
-}
-@media (max-width:800px){
-  .filtros{ grid-template-columns: 1fr 1fr; }
-  .totais{ display:none; }
-}
 
+@media (max-width: 900px){
+  .filtros{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 8px 10px;
+    margin-top: 8px;
+  }
+  /* Campos do Angular Material ocupam 100% da célula */
+  .filtros .campo,
+  :host ::ng-deep .campo .mat-mdc-form-field{ width: 100% !important; }
+  :host ::ng-deep .campo.slim .mat-mdc-text-field-wrapper{
+    height: 48px; padding-right: 4px;
+  }
+}
+@media (max-width: 640px){
+  /* container não passa de 100% */
+  .conteudo{ max-width:100%; width:100%; padding: 12px; box-sizing:border-box; }
+
+  /* tira sticky header e vira “lista de cards” */
+  .tabela .wrap{
+    overflow: visible;      /* sem scroll horizontal */
+    border-radius: 12px;
+  }
+  table{ width:100%; border-collapse: separate; border-spacing: 0 10px; }
+  thead{ display:none; }
+
+  tbody{ display:block; }
+  tbody tr{
+    display:block;
+    background: var(--card);
+    border:1px solid #e7eeec;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  tbody td{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    padding: 6px 0;
+    border-bottom: 0;
+    font-size: 13px;
+  }
+  /* rótulo da “coluna” vem do atributo data-th do TD */
+  tbody td::before{
+    content: attr(data-th);
+    flex: 0 0 110px;        /* largura do rótulo */
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  /* tags e botões se ajustam */
+  .tag{ font-size:12px; padding:3px 8px; }
+  .paginacao{ gap:6px; margin: 10px auto 4px; }
+  .paginacao button.mat-mdc-stroked-button{
+    min-width: 32px; height: 32px; padding: 0 8px; border-radius: 8px;
+  }
+}
