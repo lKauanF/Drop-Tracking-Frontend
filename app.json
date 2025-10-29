@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "18c47aa7-3fd8-4129-82af-d8eaf9c07d4b"
+      }
+    },
+    "owner": "lkauan",
+    "slug": "droptracking"
+  }
+}
