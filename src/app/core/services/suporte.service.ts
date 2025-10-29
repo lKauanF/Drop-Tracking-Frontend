@@ -1,56 +1,52 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export type TicketStatus = 'aberto' | 'em_atendimento' | 'resolvido';
 
 export interface Ticket {
   id: string;
-  assunto: string;           // opcionalmente preenche com primeira linha da descrição
+  assunto: string;
   descricao: string;
-  anexoUrl?: string;
-  criadoEm: string;          // ISO
   status: TicketStatus;
+  criadoEm: string;          // ISO
+  atualizadoEm: string;      // ISO
+  mensagens?: TicketMensagem[];
 }
 
+export interface TicketMensagem {
+  id: string;
+  ticketId: string;
+  autor: 'usuario' | 'suporte' | 'sistema';
+  texto: string;
+  criadoEm: string;          // ISO
+  anexos?: { nome: string; url: string }[];
+}
 
 @Injectable({ providedIn: 'root' })
 export class SuporteService {
   private http = inject(HttpClient);
-  private API = '/api/support';
-
-  // mock local (troque por chamadas reais quando quiser)
-  private mem = new BehaviorSubject<Ticket[]>([
-    { id: '1001', assunto: 'Exemplo: dúvida de uso', descricao: 'Como exporto PDF?', status: 'resolvido', criadoEm: new Date(Date.now()-86400000*4).toISOString() },
-    { id: '1002', assunto: 'Erro de acesso', descricao: 'Não consigo entrar', status: 'em_atendimento', criadoEm: new Date(Date.now()-86400000*2).toISOString() },
-    { id: '1003', assunto: 'Bug na tela de pacientes', descricao: 'Filtro não aplica', status: 'aberto', criadoEm: new Date().toISOString() },
-  ]);
+  private api = '/api/suporte'; // ajuste conforme seu proxy/host
 
   listarMeus(): Observable<Ticket[]> {
-    // return this.http.get<Ticket[]>(`${this.API}/tickets/me`);
-    return this.mem.asObservable().pipe(delay(120));
+    return this.http.get<Ticket[]>(`${this.api}/meus`);
   }
 
-  criar(descricao: string, file?: File): Observable<Ticket> {
-    // Exemplo com upload (descomente quando tiver backend):
-    // const form = new FormData();
-    // form.append('descricao', descricao);
-    // if (file) form.append('anexo', file);
-    // return this.http.post<Ticket>(`${this.API}/tickets`, form);
-
-    // Mock local
-    const novo: Ticket = {
-      id: String(Math.floor(1000 + Math.random()*9000)),
-      assunto: (descricao.split('\n')[0] || 'Novo pedido').slice(0, 80),
-      descricao,
-      status: 'aberto',
-      criadoEm: new Date().toISOString(),
-      anexoUrl: file ? `mock://${file.name}` : undefined,
-    };
-    this.mem.next([novo, ...this.mem.value]);
-    return of(novo).pipe(delay(200));
+  detalhes(ticketId: string): Observable<Ticket> {
+    return this.http.get<Ticket>(`${this.api}/tickets/${ticketId}`);
   }
 
-  
+  criar(descricao: string, arquivo?: File): Observable<Ticket> {
+    const form = new FormData();
+    form.append('descricao', descricao);
+    if (arquivo) form.append('anexo', arquivo, arquivo.name);
+    return this.http.post<Ticket>(`${this.api}/tickets`, form);
+  }
+
+  // Stream de atualizações do usuário (todos os tickets dele)
+  conectarStream(): EventSource {
+    // Endpoint SSE protegido por sessão/cookie/JWT no seu backend
+    const es = new EventSource(`${this.api}/stream`);
+    return es;
+  }
 }
