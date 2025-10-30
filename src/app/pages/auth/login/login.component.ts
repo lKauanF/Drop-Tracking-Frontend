@@ -1,29 +1,24 @@
 import { Component } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Marca3dComponent } from '../../../shared/components/marca-3d/marca-3d.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgIf],
+  imports: [CommonModule, RouterLink, NgIf, Marca3dComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  // UI
   showPassword = false;
-
-  // Campos
-  cpf = '';         // somente dígitos
-  cpfMascara = '';  // exibição 000.000.000-00
+  cpf = '';
+  cpfMascara = '';
   senha = '';
-
-  // Estado
   cpfTouched = false;
   senhaTouched = false;
   authError = '';
 
-  // ---- Validações ----
   get cpfCompleto(): boolean {
     return /^\d{11}$/.test(this.cpf);
   }
@@ -32,31 +27,26 @@ export class LoginComponent {
     return this.cpfCompleto && this.validarCpf(this.cpf);
   }
 
-  /** Valida CPF pelo algoritmo dos dígitos verificadores */
   private validarCpf(cpf: string): boolean {
     if (!/^\d{11}$/.test(cpf)) return false;
-    // Rejeita CPFs com todos os dígitos iguais
     if (/^(\d)\1{10}$/.test(cpf)) return false;
-
     const calcDig = (len: number) => {
       let soma = 0;
-      for (let i = 0; i < len; i++) {
-        soma += Number(cpf[i]) * (len + 1 - i);
-      }
+      for (let i = 0; i < len; i++) soma += Number(cpf[i]) * (len + 1 - i);
       const resto = soma % 11;
       return resto < 2 ? 0 : 11 - resto;
     };
-
     const d1 = calcDig(9);
     const d2 = calcDig(10);
     return d1 === Number(cpf[9]) && d2 === Number(cpf[10]);
   }
 
-  // ---- Interações ----
-  toggleShowPassword() { this.showPassword = !this.showPassword; }
+  toggleShowPassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   filtrarTeclas(ev: KeyboardEvent) {
-    const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
+    const allowed = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End'];
     if (allowed.includes(ev.key)) return;
     if (!/^\d$/.test(ev.key)) ev.preventDefault();
   }
@@ -97,11 +87,8 @@ export class LoginComponent {
     this.authError = '';
     this.cpfTouched = true;
     this.senhaTouched = true;
-
-    if (!this.cpfValido) return; // agora exige CPF válido (não só 11 dígitos)
+    if (!this.cpfValido) return;
     if (!this.senha) return;
-
-    // Chamada real ao backend iria aqui com this.cpf e this.senha
-    this.authError = 'Senha incorreta.'; // demo
+    this.authError = 'Senha incorreta.';
   }
 }

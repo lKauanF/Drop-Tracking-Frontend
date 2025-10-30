@@ -6,6 +6,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LogoComponent } from '../components/logo/logo.component';
+import { estaNoBrowser } from '../utils/plataforma';
 
 @Component({
   selector: 'app-rail',
@@ -58,35 +59,60 @@ import { LogoComponent } from '../components/logo/logo.component';
 })
 export class RailComponent implements AfterViewInit, OnDestroy {
   @ViewChild('rail', { static: true }) railRef!: ElementRef<HTMLElement>;
-  private ro?: ResizeObserver;
+
   private zone = inject(NgZone);
+  private isBrowser = estaNoBrowser();
+
+  private ro?: ResizeObserver;
+  private onResize?: () => void;
+  private onOrient?: () => void;
 
   ngAfterViewInit(): void {
+    if (!this.isBrowser) return; // SSR: não toca no DOM
+
     const setVar = () => {
-      const el = this.railRef.nativeElement;
-      // altura visual incluindo paddings/borda
-      const h = Math.ceil(el.getBoundingClientRect().height);
-      document.documentElement.style.setProperty('--altura-navbar', `${h}px`);
+      const el: unknown = this.railRef?.nativeElement;
+      if (!(el instanceof Element)) return;
+      const bcrOk = typeof (el as any).getBoundingClientRect === 'function';
+      if (!bcrOk) return;
+
+      const rect = el.getBoundingClientRect();
+      const h = Math.ceil(rect.height);
+
+      const root = document.documentElement;
+      root.style.setProperty('--altura-navbar', `${h}px`);
     };
 
-    // mede agora…
-    setVar();
+    // mede agora
+    queueMicrotask(setVar);
 
-    // …e sempre que mudar tamanho/layout
+    // e observa mudanças de layout somente no browser
     this.zone.runOutsideAngular(() => {
-      this.ro = new ResizeObserver(setVar);
-      this.ro.observe(this.railRef.nativeElement);
-      window.addEventListener('orientationchange', setVar, { passive: true });
-      window.addEventListener('resize', setVar, { passive: true });
+      if ('ResizeObserver' in globalThis) {
+        this.ro = new ResizeObserver(setVar);
+        this.ro.observe(this.railRef.nativeElement);
+      }
+
+      this.onResize = () => setVar();
+      this.onOrient = () => setVar();
+
+      window.addEventListener('resize', this.onResize, { passive: true });
+      window.addEventListener('orientationchange', this.onOrient, { passive: true });
     });
   }
 
   ngOnDestroy(): void {
-    this.ro?.disconnect();
-    window.removeEventListener('orientationchange', this.noop);
-    window.removeEventListener('resize', this.noop);
-  }
+    if (!this.isBrowser) return;
 
-  // util só pra remover listeners com assinatura compatível
-  private noop() {}
+    this.ro?.disconnect();
+
+    if (this.onResize) {
+      window.removeEventListener('resize', this.onResize);
+      this.onResize = undefined;
+    }
+    if (this.onOrient) {
+      window.removeEventListener('orientationchange', this.onOrient);
+      this.onOrient = undefined;
+    }
+  }
 }

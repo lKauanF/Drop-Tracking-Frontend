@@ -1,0 +1,15 @@
+.brand__canvas {
+  position: relative;
+  width: var(--logo-size, 248px);
+  height: var(--logo-size, 248px);
+  display: grid;
+  place-items: center;
+}
+
+.brand__canvas canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}

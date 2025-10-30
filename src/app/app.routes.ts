@@ -9,8 +9,11 @@ export const routes: Routes = [
 
   // Atenção ao nome da classe exportada no componente de cadastro:
   // geralmente é "CadastroComponent" (primeira maiúscula).
-  { path: 'cadastro', loadComponent: () =>
-      import('./pages/auth/cadastro/cadastro.component').then(m => m.cadastroComponent) },
+  {
+  path: 'cadastro',
+  loadComponent: () =>
+    import('./pages/auth/cadastro/cadastro.component').then(m => m.CadastroComponent)
+},
 
   {
   path: 'recuperar-senha',

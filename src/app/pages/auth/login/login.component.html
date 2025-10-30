@@ -1,14 +1,19 @@
 <main class="login" role="main">
   <section class="login__container" aria-labelledby="loginTitle">
-    <!-- Marca -->
+    <!-- Marca 3D Reutilizável -->
     <header class="brand" aria-label="Drop Tracking">
-      <img class="brand__logo" src="../../../../assets/Logo.svg" alt="" />
+      <app-marca-3d
+  [gotaPath]="'/assets/3dModel/LogoGota.glb'"
+  [arcoPath]="'/assets/3dModel/LogoArco.glb'"
+  [gotaAnguloInicial]="0"
+  [arcoAnguloInicial]="90">
+</app-marca-3d>
       <h1 id="loginTitle" class="brand__name">Drop Tracking</h1>
     </header>
 
     <!-- Card -->
     <div class="card">
-      <!-- CPF (único) -->
+      <!-- CPF -->
       <div class="field">
         <label class="sr-only" for="cpf">CPF</label>
         <input
@@ -24,12 +29,9 @@
           (paste)="onCpfPaste($event)"
           (blur)="cpfTouched = true"
         />
-
-        <!-- Erro: incompleto -->
         <div class="error" *ngIf="cpfTouched && !cpfCompleto">
           CPF deve ter 11 números.
         </div>
-        <!-- Erro: inválido (algoritmo) -->
         <div class="error" *ngIf="cpfTouched && cpfCompleto && !cpfValido">
           CPF inválido.
         </div>
@@ -80,16 +82,11 @@
         <a class="btn btn-ghost" routerLink="/cadastro">Cadastrar</a>
       </div>
 
-      <!-- Erro geral -->
       <div class="auth-error" *ngIf="authError">{{ authError }}</div>
     </div>
 
-    <!-- Link fora do card -->
     <div class="forgot">
       <a routerLink="/recuperar-senha">Esqueceu a <span class="accent">senha</span>?</a>
     </div>
-
-    
-
   </section>
 </main>

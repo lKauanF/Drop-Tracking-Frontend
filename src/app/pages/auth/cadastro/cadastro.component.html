@@ -1,10 +1,15 @@
 <main class="register" role="main">
   <section class="register__container" aria-labelledby="registerTitle">
-    <!-- Marca -->
+  <!-- Marca 3D -->
     <header class="brand" aria-label="Drop Tracking">
-      <!-- use o nome exato do arquivo (respeita maiúsculas/minúsculas) -->
-      <img class="brand__logo" [src]="'/assets/Logo.svg'" alt="Logo" />
-      <h1 id="registerTitle" class="brand__name">Drop Tracking</h1>
+      <app-marca-3d
+        gotaPath="/assets/3dModel/LogoGota.glb"
+        arcoPath="/assets/3dModel/LogoArco.glb"
+        [gotaAnguloInicial]="0"
+        [arcoAnguloInicial]="90">
+      </app-marca-3d>
+
+      <h1 id="registerTitle" class="brand__name">Cadastro</h1>
     </header>
 
     <!-- CARD -->

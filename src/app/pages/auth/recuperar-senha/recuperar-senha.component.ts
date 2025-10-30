@@ -1,17 +1,23 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Marca3dComponent } from '../../../shared/components/marca-3d/marca-3d.component';
 
 @Component({
   selector: 'app-recuperar-senha',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Marca3dComponent],
   template: `
 <main class="recover" role="main">
   <section class="recover__container" aria-labelledby="recoverTitle">
     <!-- Marca -->
     <header class="brand" aria-label="Drop Tracking">
-      <img class="brand__logo" src="/assets/Logo.svg" alt="Logo" />
+          <app-marca-3d
+        [gotaPath]="'/assets/3dModel/LogoGota.glb'"
+        [arcoPath]="'/assets/3dModel/LogoArco.glb'"
+        [gotaAnguloInicial]="0"
+        [arcoAnguloInicial]="90">
+      </app-marca-3d>
       <h1 id="recoverTitle" class="brand__name">Redefinir senha</h1>
       <p class="brand__sub">Informe seu CPF e defina uma nova senha.</p>
     </header>
