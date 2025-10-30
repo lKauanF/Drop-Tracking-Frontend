@@ -1,35 +1,27 @@
-/* Tokens locais do Rail (se não vierem do Shell/styles.scss) */
+/* =========================
+   Tokens locais do Rail
+========================= */
 :host {
-  --rail: #146d60;         /* cor da pílula */
-  --rail-track-w: 56px;    /* largura da pílula */
-  --rail-top-pad: 88px;    /* espaço do 1º ícone até o topo */
-  --rail-bottom-pad: 26px; /* altura da pílula do rodapé */
+  --rail: #146d60;
+  --rail-track-w: 56px;
+  --rail-top-pad: 88px;
+  --rail-bottom-pad: 26px;
+  --rail-gap: 24px;
+
+  /* dimensões/níveis do off-canvas */
+  --rail-offcanvas-w: 84px; /* largura no mobile quando aberto */
+  --rail-z: 300;            /* z-index do drawer (acima da topbar) */
+  --backdrop-z: 290;        /* z-index do backdrop */
+  --hamburger-z: 310;       /* z-index do botão */
+
+  /* caso tenha notch/topbar do app, pode usar:
+     --appbar-h: 56px;
+     e trocar inset/height no mobile para não sobrepor */
 }
 
-/* ...resto do seu CSS... */
-
-.rail .menu::before,
-.rail .rodape-rail::after{
-  content: '';
-  position: absolute;
-  left: 10px; top: 0;
-  width: var(--rail-track-w);
-  height: 100%;
-  border-radius: 28px;
-  background: var(--rail, #146d60); /* <-- fallback garante cor */
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* ===== Ajustes finos de espaçamento da Rail ===== */
-:host {
-  --rail-gap: 24px;            /* espaço entre logo, menu e rodapé */
-  --rail-track-w: 56px;        /* largura da “pílula” verde */
-  --rail-top-pad: 88px;        /* descola o 1º ícone do topo */
-  --rail-bottom-pad: 26px;     /* deixa a barra/rodapé mais alta */
-}
-
-/* Estrutura geral */
+/* =========================
+   Estrutura base (desktop)
+========================= */
 .rail{
   position: sticky; top: 0;
   height: 100dvh;
@@ -39,39 +31,41 @@
   padding: 12px 1px;
 }
 
-/* Logo */
 .rail .logo{
   display: grid; place-items: center;
   margin-top: 4px;
 }
 
-/* MENU — descola do topo e mantém a pílula alinhada */
-.rail .menu{
-  position: relative;
-  display: grid;
-  justify-items: center;
-  gap: 10px;
+.rail .menu,
+.rail .rodape-rail { position: relative; }
 
-  /* empurra a primeira opção pra baixo (descola do topo) */
-  padding: var(--rail-top-pad) 0 14px;
-}
-.rail .menu::before{
+.rail .menu::before,
+.rail .rodape-rail::after{
   content: '';
   position: absolute;
   left: 10px; top: 0;
-  width: var(--rail-track-w); height: 100%;
+  width: var(--rail-track-w);
+  height: 100%;
   border-radius: 28px;
-  background: var(--rail);
-  z-index: 0; pointer-events: none;
+  background: var(--rail, #146d60);
+  z-index: 0;
+  pointer-events: none;
 }
 
-/* Ícones */
+.rail .menu{
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: var(--rail-top-pad) 0 14px;
+}
+
 .rail .item{
   width: 44px; height: 44px;
   display: grid; place-items: center;
   color: #eaf4f3; text-decoration: none;
   border-radius: 12px;
   position: relative; z-index: 1;
+  transition: background .15s ease;
 }
 .rail .item:hover{ background: rgba(255,255,255,.08); }
 .rail .item.ativo{
@@ -79,123 +73,118 @@
   box-shadow: 0 8px 18px rgba(20,109,96,.22), inset 0 0 0 1px rgba(255,255,255,.08);
 }
 
-/* RODAPÉ — pílula mais alta para destacar a notificação/ajuda */
 .rail .rodape-rail{
-  position: relative;
   display: grid;
   justify-items: center;
   gap: 10px;
-
-  /* engrossa a “barra” do rodapé */
   padding: var(--rail-bottom-pad) 0;
 }
-.rail .rodape-rail::after{
-  content: '';
-  position: absolute;
-  left: 10px; top: 0;
-  width: var(--rail-track-w); height: 100%;
-  border-radius: 28px;
-  background: var(--rail);
-  z-index: 0; pointer-events: none;
+.rail .rodape-rail .item{ width: 46px; height: 46px; }
+
+/* =========================
+   Hamburguer + Drawer mobile
+========================= */
+
+
+/* Botão hamburger (fica escondido no desktop) */
+.hamburger{
+  position: fixed;
+  inset-block-start: 12px;
+  inset-inline-start: 20px;
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: 10px;
+  border: 0;
+  background: #f7faf9;
+  display: none; /* visível apenas no mobile */
+  z-index: var(--hamburger-z);
+  cursor: pointer;
+}
+.hamburger .linha{
+  display: block;
+  inline-size: 22px;
+  block-size: 2px;
+  margin: 5px auto;
+  background: #146d60;
+  border-radius: 2px;
 }
 
-/* (opcional) deixa o ícone do rodapé um pouquinho maior */
-.rail .rodape-rail .item{
-  width: 46px; height: 46px;   /* sutilmente maior que os de cima */
+/* Backdrop clicável */
+.backdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  border: 0;
+  z-index: var(--backdrop-z);
 }
 
 /* =========================
-   RAIL — MOBILE REFINADO
-  
+   Mobile (≤ 768px)
 ========================= */
 @media (max-width: 768px){
-  /* Layout com rail fixa à esquerda e conteúdo ao lado */
+  /* hamburger visível e acima de tudo */
+  .hamburger{ display: inline-grid; place-items: center; }
+
+  /* Drawer vira off-canvas sobre a topbar (z-index alto) */
+  .rail{
+    position: fixed;
+    inset-block: 0;                 /* se quiser abaixo da topbar: inset-block: var(--appbar-h, 0) 0 0 0; */
+    inset-inline-start: 0;
+    inline-size: var(--rail-offcanvas-w);
+    block-size: 100dvh;             /* se usar appbar-h: calc(100dvh - var(--appbar-h, 0px)) */
+    background: transparent;
+    z-index: var(--rail-z);
+    transform: translateX(-100%);   /* escondida */
+    transition: transform .24s ease;
+    will-change: transform;
+
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* mantém a linha da logo para não mudar layout */
+    gap: var(--rail-gap, 24px);
+    padding: 12px 0;
+  }
+
+  /* 🔒 Esconde a LOGO sem afetar o layout */
+  .rail .logo{
+    visibility: hidden;  /* mantém o espaço ocupado */
+    opacity: 0;          /* invisível */
+    pointer-events: none;/* não clica */
+  }
+
+  /* quando aberto, traz pra tela */
+  :host.is-open .rail{ transform: translateX(0); }
+
+  /* Centraliza de verdade o “trilho” (pílula) e os ícones */
+  .rail .menu,
+  .rail .rodape-rail{
+    justify-items: center;
+  }
+
+  .rail .menu::before,
+  .rail .rodape-rail::after{
+    left: 50%;
+    transform: translateX(-50%);    /* trilho centralizado */
+    width: var(--rail-track-w);
+    display: block;
+  }
+
+  .rail .item{
+    margin: 0;                      /* remove empurrão lateral */
+    width: 44px; height: 44px;
+  }
+
+  .rail .rodape-rail .item{
+    width: 46px; height: 46px;
+  }
+}
+
+/* =========================
+   Layout helper opcional
+========================= */
+@media (min-width: 769px){
   .layout{
     display: grid;
-    grid-template-columns: 88px 1fr; /* ~ largura da rail */
-    gap: 0;
+    grid-template-columns: 88px 1fr;
+    min-height: 100dvh;
   }
-
-  /* Rail grudada à esquerda, ocupando a altura toda */
-  .rail{
-    position: sticky; top: 0; z-index: 30;
-    height: 100dvh;
-    background: transparent;
-    display: grid;
-    grid-template-rows: auto 1fr auto; /* logo | menu | rodapé */
-    gap: var(--rail-gap, 24px);
-    padding: 12px 1px;
-  }
-
-  /* Logo centralizada */
-  .rail .logo{
-    display: grid; place-items: center;
-    margin-top: 4px;
-  }
-
-  /* MENU em coluna, com “pílula” vertical ligada */
-  .rail .menu{
-    position: relative;
-    display: grid;
-    justify-items: center;
-    gap: 10px;
-    padding: var(--rail-top-pad, 88px) 0 14px;
-    background: transparent;            /* remove pílula horizontal */
-    border-radius: 0;
-    box-shadow: none;
-  }
-  .rail .menu::before{
-    content: '';
-    position: absolute;
-    left: 10px; top: 0;
-    width: var(--rail-track-w, 56px);
-    height: 100%;
-    border-radius: 28px;
-    background: var(--rail, #146d60);
-    z-index: 0; pointer-events: none;
-    display: block;
-  }
-
-  /* Ícones */
-  .rail .item{
-    width: 44px; height: 44px;
-    display: grid; place-items: center;
-    color: #eaf4f3;
-    border-radius: 12px;
-    position: relative; z-index: 1;
-    transition: background .15s ease;
-  }
-  .rail .item:hover{ background: rgba(255,255,255,.08); }
-  .rail .item.ativo{
-    background: rgba(255,255,255,.16);
-    box-shadow: 0 8px 18px rgba(20,109,96,.22), inset 0 0 0 1px rgba(255,255,255,.08);
-  }
-
-  /* Rodapé mantém a “pílula” vertical */
-  .rail .rodape-rail{
-    position: relative;
-    display: grid;
-    justify-items: center;
-    gap: 10px;
-    padding: var(--rail-bottom-pad, 26px) 0;
-  }
-  .rail .rodape-rail::after{
-    content: '';
-    position: absolute;
-    left: 10px; top: 0;
-    width: var(--rail-track-w, 56px);
-    height: 100%;
-    border-radius: 28px;
-    background: var(--rail, #146d60);
-    z-index: 0; pointer-events: none;
-    display: block;
-  }
-  .rail .rodape-rail .item{
-    width: 46px; height: 46px; /* sutil destaque */
-    background: transparent;
-    color: #eaf4f3;
-  }
-
-  /* Conteúdo não precisa “descer” por uma barra superior */
-  .conteudo{ padding-top: 0; }
 }
