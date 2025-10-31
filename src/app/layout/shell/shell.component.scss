@@ -1,15 +1,56 @@
+/* Desktop padrão */
 .layout {
+  position: relative;
   display: grid;
-  grid-template-columns: 76px 1fr;
+  grid-template-columns: 76px 1fr;   /* rail fixa + conteúdo */
   min-height: 100dvh;
   background: var(--bg, #f7faf9);
   color: var(--ink, #0f2a2e);
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
+/* Conteúdo */
 .content {
   max-width: 1280px;
   width: 100%;
   padding: 16px 28px 28px;
   margin: 0 auto;
+  transition: transform .24s ease, margin-left .24s ease; /* smooth no mobile */
+}
+
+/* ===== Mobile (≤768px) ===== */
+@media (max-width: 768px){
+  /* some a coluna da rail: conteúdo vira 100% */
+  .layout {
+    grid-template-columns: 1fr;
+    overflow-x: hidden; /* evita scroll lateral */
+  }
+
+  /* padding mais enxuto no mobile */
+  .content {
+    max-width: 100%;
+    padding: 12px 16px 18px;
+  }
+
+  /*
+   * Empurra o conteúdo quando o drawer estiver aberto.
+   * Usa :has() para olhar o irmão <app-rail> com classe .is-open.
+   * A largura vem da variável já usada na rail: --rail-offcanvas-w (84px).
+   */
+  .layout:has(app-rail.is-open) .content {
+    transform: translateX(var(--rail-offcanvas-w, 84px));
+  }
+}
+
+/* ⬇️ ADICIONE ISTO */
+@media (max-width: 768px) {
+  /* remove a coluna fixa da rail */
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  /* garante que o host não “empurre” a grade */
+  app-rail {
+    display: contents; /* não cria caixa própria na grid */
+  }
 }

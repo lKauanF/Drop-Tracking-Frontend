@@ -91,3 +91,46 @@
   .grid-2{ grid-template-columns: 1fr; }
 }
 
+/* ===== Guia — ajustes só no MOBILE (≤768px) ===== */
+@media (max-width: 768px) {
+  /* Dá um respiro no topo p/ não ficar sob o hamburger (44px + folga) */
+ 
+  /* Título centralizado e sem disputa por espaço */
+  .topbar {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    row-gap: 8px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .title {
+    margin: 0;
+    font-weight: 700;
+  }
+
+  /* Hero em 1 coluna no mobile */
+  .hero {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 12px;
+  }
+  .hero__illu {
+    display: grid;
+    place-items: center;
+  }
+
+  /* Botões do TOC mais “grudados” e quebrando linha bonitinho */
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .toc__btn {
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-size: 13px;
+  }
+
+  /* Cards e grid 2→1 coluna */
+  .grid-2 { grid-template-columns: 1fr; }
+}

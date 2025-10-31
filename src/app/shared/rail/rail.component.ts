@@ -160,4 +160,6 @@ export class RailComponent implements AfterViewInit, OnDestroy {
     if (this.onOrient) { window.removeEventListener('orientationchange', this.onOrient); this.onOrient = undefined; }
     if (this.onKeyDown) { window.removeEventListener('keydown', this.onKeyDown); this.onKeyDown = undefined; }
   }
+  
 }
+

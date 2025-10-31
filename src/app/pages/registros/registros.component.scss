@@ -25,7 +25,7 @@
   grid-row: 1 / span 2;
   display: grid;
   grid-template-rows: auto auto;
-  row-gap: 73px;
+  row-gap:40px;
   align-content: start;
 }
 
@@ -141,49 +141,53 @@ tbody tr:hover td{ background:#f7fbfa; }
   :host ::ng-deep .campo.slim .mat-mdc-text-field-wrapper{
     height: 48px; padding-right: 4px;
   }
+
+  /* ===== MOBILE (≤680px): botões e "X Resultados" na MESMA linha ===== */
+@media (max-width: 680px){
+  .topbar{
+    display: grid;
+    grid-template-columns: auto 1fr;  /* col 1: botões | col 2: resultados */
+    grid-template-rows: auto auto;    /* linha 1: título | linha 2: botões+resultados */
+    align-items: center;
+    justify-items: stretch;            /* ocupa a linha inteira */
+    column-gap: 12px;
+    row-gap: 6px;
+  }
+
+  /* Título sozinho na primeira linha, centralizado */
+  .topbar .title-row{
+    grid-column: 1 / -1;
+    text-align: center;
+  }
+  .topbar .title{ margin: 0; font-size: 16px; font-weight: 700; }
+
+  /* Botões à esquerda, sem margens extras */
+  .topbar .acoes{
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start ;
+    align-self: center;
+    display: inline-flex;
+    gap: 2px;
+    margin: 0 ;
+  }
+  .topbar .btn-icon{ width: 28px; height: 28px; border-radius: 9px; }
+
+  /* "X Resultados" à direita, na mesma linha */
+  .topbar .meta-right{
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end !important;
+    align-self: center !important;
+    margin: 0 !important;
+  }
+  .topbar .totais{ font-size: 12px; }
+
+  /* Linha sob o bloco */
+  .hairline{
+    height: 1px;
+    background: var(--line, #e9eff1);
+    margin: 6px 0 10px;
+  }
 }
-@media (max-width: 640px){
-  /* container não passa de 100% */
-  .conteudo{ max-width:100%; width:100%; padding: 12px; box-sizing:border-box; }
-
-  /* tira sticky header e vira “lista de cards” */
-  .tabela .wrap{
-    overflow: visible;      /* sem scroll horizontal */
-    border-radius: 12px;
-  }
-  table{ width:100%; border-collapse: separate; border-spacing: 0 10px; }
-  thead{ display:none; }
-
-  tbody{ display:block; }
-  tbody tr{
-    display:block;
-    background: var(--card);
-    border:1px solid #e7eeec;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  tbody td{
-    display:flex;
-    align-items:flex-start;
-    gap:8px;
-    padding: 6px 0;
-    border-bottom: 0;
-    font-size: 13px;
-  }
-  /* rótulo da “coluna” vem do atributo data-th do TD */
-  tbody td::before{
-    content: attr(data-th);
-    flex: 0 0 110px;        /* largura do rótulo */
-    color: var(--muted);
-    font-weight: 600;
-  }
-
-  /* tags e botões se ajustam */
-  .tag{ font-size:12px; padding:3px 8px; }
-  .paginacao{ gap:6px; margin: 10px auto 4px; }
-  .paginacao button.mat-mdc-stroked-button{
-    min-width: 32px; height: 32px; padding: 0 8px; border-radius: 8px;
-  }
 }
