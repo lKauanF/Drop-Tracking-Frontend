@@ -67,7 +67,7 @@
 :host ::ng-deep .mat-mdc-form-field-icon-prefix{
   display:inline-flex !important; align-items:center !important; height:100%;
 }
-:host ::ng-deep .mat-mdc-form-field-icon-prefix .mat-icon{ width:18px; height:18px; font-size:18px; }
+:host ::ng-deep .mat-mdc-form-field-icon-prefix .mat-icon{ width:18px; height:30px; font-size:18px; }
 
 /* ===== Grid de cards ===== */
 .grid{
@@ -88,7 +88,156 @@
 
 /* ===== Mobile ===== */
 
-@media (max-width:640px){
-  .filtros{ grid-template-columns: 1fr 36px minmax(140px,45%); column-gap:8px; }
-  .totais{ display:none; }
+/* =========================
+   MOBILE — Pacientes (≤ 680px)
+   Mantém desktop intacto
+========================= */
+@media (max-width: 680px){
+
+  /* container sem cortes e com respiro */
+  .conteudo{
+    max-width: 100%;
+    width: 100%;
+    padding: 12px 16px 18px;
+    box-sizing: border-box;
+  }
+
+  /* Topbar: título central + divisória, ações abaixo somem os totais */
+  .topbar{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    justify-items: center;
+    align-items: center;
+    row-gap: 8px;
+    margin-bottom: 8px;
+  }
+  .title-row{
+    grid-column: 1 / -1;
+    grid-row: 1;
+    text-align: center;
+  }
+  .title{ margin: 0; font-size: 16px; font-weight: 700; }
+
+  /* linha centralizada sob o título (igual aos outros screens) */
+  .hairline{
+    height: 1px;
+    background: var(--line, #e9eff1);
+    max-width: 520px;
+    margin: 6px auto 10px;
+    opacity: .9;
+  }
+
+  /* Oculta “X resultados” no mobile para limpar a barra */
+  .meta-right, .totais{ display: none; }
+
+  /* Filtros em faixa rolável, compacta e sem corte lateral */
+  .filtros{
+    display: flex;
+    gap: 8px;
+    padding: 6px 2px 10px;
+    margin: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .filtros::-webkit-scrollbar{ display: none; }
+
+  /* cada campo vira um “chip” estreito */
+  .filtros .campo{ flex: 0 0 auto; min-width: 160px; }
+  .filtros .campo:first-child{ min-width: 200px; }    /* busca */
+  .btn-tune{ flex: 0 0 36px; }
+
+  /* material compact */
+  :host ::ng-deep .campo.slim .mat-mdc-text-field-wrapper{
+    height: 38px !important;
+    border-radius: 999px !important;
+    background: #eef4f6;
+    padding: 0 8px !important;
+    box-shadow: inset 0 0 0 1px #e2e9ec;
+  }
+  :host ::ng-deep .campo.slim .mdc-notched-outline__leading,
+  :host ::ng-deep .campo.slim .mdc-notched-outline__trailing,
+  :host ::ng-deep .campo.slim .mdc-notched-outline__notch{
+    border-color: transparent !important;
+  }
+  :host ::ng-deep .campo.slim .mat-mdc-form-field-infix{ padding: 6px 0 !important; }
+  :host ::ng-deep .campo.slim .mdc-text-field__input,
+  :host ::ng-deep .campo.slim .mat-mdc-select-value{
+    font-size: 13px; line-height: 24px;
+  }
+  :host ::ng-deep .campo .mat-mdc-form-field-subscript-wrapper{ display: none !important; }
+
+  /* Grid de cards: 1 por linha, com respiro agradável */
+  .grid{
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-top: 8px;
+  }
+
+  /* Ajustes gentis do card (nomes podem variar; usa seletores seguros) */
+  .grid > *{
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 14px 12px;
+  }
+  /* cabeçalho do card (nome + menu) mais “arejado” */
+  .grid > * .cabecalho,
+  .grid > * [class*="header"],
+  .grid > * [class*="titulo"]{
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; margin-bottom: 8px;
+  }
+  /* linha de meta (leito/prontuário) em duas colunas fluidas */
+  .grid > * .meta,
+  .grid > * [class*="info"]{
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px;
+    font-size: 13px;
+  }
+  /* status/alarme/infusão em linha única, quebra quando precisa */
+  .grid > * .status,
+  .grid > * [class*="alarme"],
+  .grid > * [class*="infus"]{
+    display: flex; flex-wrap: wrap; gap: 8px 10px; margin-top: 6px;
+    align-items: center;
+  }
+  /* “chips” de estado um pouco menores */
+  .grid .tag, .grid [class*="chip"]{
+    font-size: 12px; padding: 4px 10px; border-radius: 999px;
+  }
+
+  /* Paginação compacta */
+  .paginacao{ gap: 6px; margin: 12px auto 6px; }
+  .paginacao button.mat-mdc-stroked-button{
+    min-width: 32px; height: 32px; padding: 0 8px; border-radius: 8px;
+  }
+
+  /* CENTRALIZAR O "+" NO MOBILE (≤ 680px) */
+@media (max-width: 680px){
+  .topbar{
+    grid-template-columns: 1fr;        /* uma coluna */
+    grid-template-rows: auto auto;     /* 1: título | 2: botão */
+    justify-items: center;
+  }
+
+  .title-row{
+    grid-column: 1 / -1;
+    display: grid;
+    justify-items: center;              /* centraliza conteúdo dentro do bloco */
+    align-content: start;
+    row-gap: 10px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .btn-plus{
+    grid-row: 2;
+    justify-self: center;               /* garante o centro */
+    margin: 0;                          /* zera qualquer deslocamento */
+  }
 }
+
+
+  
+}
+
