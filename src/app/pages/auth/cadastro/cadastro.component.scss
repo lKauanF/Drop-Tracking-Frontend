@@ -15,26 +15,26 @@
 
   min-height: 100svh;
   display: grid;
-  place-content: center;   /* centro vertical + horizontal do CONJUNTO */
+  place-content: center;
   place-items: center;
   padding: 56px 24px 32px;
   background: var(--bg);
   color: var(--text);
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
+
 .register{
   position: fixed;
-  inset: 0;                 /* top/right/bottom/left: 0 */
-  overflow: hidden;         /* sem scroll */
+  inset: 0;
+  overflow: hidden;
   display: grid;
-  place-content: center;    /* centro vertical+horiz */
+  place-content: center;
   place-items: center;
-  padding: 24px;            /* padding pequeno não estoura */
+  padding: 24px;
   gap: 16px;
 }
 
-
-/* container ocupa a altura e centraliza marca + card */
+/* container */
 .register .register__container{
   width: 100%;
   max-width: 720px;
@@ -62,21 +62,16 @@
   margin: 0 auto;
 }
 
-/* Primeira linha: duas colunas com ALTURA IGUAL */
+/* Linha CPF + Nome */
 .row-2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  align-items: baseline; /* Mantém as alturas iguais */
+  align-items: baseline;
 }
+.row-2 > .field{ display: grid; grid-template-rows: 46px 18px; }
 
-/* Cada coluna tem [área que cresce] + [erro no rodapé] */
-.row-2 > .field{
-  display: grid;
-  grid-template-rows: 46px 18px
-}
-
-/* Campos (resto do form) */
+/* Campos */
 .field + .field{ margin-top: 12px; }
 .sr-only{
   position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
@@ -100,7 +95,7 @@
   background: #fff;
 }
 
-/* Realce inválido quando há erro */
+/* Erro visual quando houver mensagem */
 .field:has(.error) input{
   border-color: var(--danger);
   box-shadow: 0 0 0 3px var(--danger-100);
@@ -119,7 +114,7 @@
 
 /* Mensagens de erro */
 .error{
-  align-self: end;            /* gruda no "rodapé" da coluna */
+  align-self: end;
   margin-top: 6px;
   font-weight: 600;
   font-size: 12px;
@@ -156,12 +151,8 @@
 .btn-ghost{ background:#fff; color:var(--text); border-color: var(--border); }
 .btn-ghost:hover{ background:#f3f6f6; }
 
-
 /* Responsivo */
 @media (max-width: 560px){
   .card{ width: 100%; }
   .row-2{ grid-template-columns: 1fr; }
 }
-
-
-

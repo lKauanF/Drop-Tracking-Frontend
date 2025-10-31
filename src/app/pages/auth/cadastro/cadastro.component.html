@@ -1,6 +1,6 @@
 <main class="register" role="main">
   <section class="register__container" aria-labelledby="registerTitle">
-  <!-- Marca 3D -->
+    <!-- Marca 3D -->
     <header class="brand" aria-label="Drop Tracking">
       <app-marca-3d
         gotaPath="/assets/3dModel/LogoGota.glb"
@@ -57,6 +57,24 @@
         </div>
       </div>
 
+      <!-- E-mail -->
+      <div class="field">
+        <div class="control">
+          <label class="sr-only" for="email">E-mail</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="E-mail:"
+            [value]="email"
+            (keydown)="onEmailKeydown($event)"
+            (input)="onEmailInput($event)"
+            (blur)="emailTouched = true"
+            [attr.aria-invalid]="emailTouched && !emailOk"
+          />
+        </div>
+        <small class="error" *ngIf="emailTouched && !emailOk">Informe um e-mail válido (ex.: nome@dominio.com).</small>
+      </div>
+
       <!-- Senha -->
       <div class="field">
         <label class="sr-only" for="senha">Senha</label>
@@ -70,11 +88,8 @@
             (blur)="senhaTouched = true"
             [attr.aria-invalid]="senhaTouched && !(lenOk && upperOk && numberOk && specialOk)"
           />
-          <button
-            type="button"
-            class="toggle-eye"
-            (click)="toggleEye(1)"
-            [attr.aria-label]="showPass1 ? 'Ocultar senha' : 'Mostrar senha'">
+          <button type="button" class="toggle-eye" (click)="toggleEye(1)"
+                  [attr.aria-label]="showPass1 ? 'Ocultar senha' : 'Mostrar senha'">
             <ng-container *ngIf="!showPass1">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                    fill="none" stroke="#6b7a80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -105,18 +120,9 @@
             (blur)="confirmarTouched = true"
             [attr.aria-invalid]="confirmarTouched && !matchOk"
           />
-          <button
-            type="button"
-            class="toggle-eye"
-            (click)="toggleEye(2)"
-            [attr.aria-label]="showPass2 ? 'Ocultar senha' : 'Mostrar senha'">
+          <button type="button" class="toggle-eye" (click)="toggleEye(2)"
+                  [attr.aria-label]="showPass2 ? 'Ocultar senha' : 'Mostrar senha'">
             <ng-container *ngIf="!showPass2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                   fill="none" stroke="#6b7a80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/>
-              </svg>
-            </ng-container>
-            <ng-container *ngIf="showPass2">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                    fill="none" stroke="#6b7a80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a21.77 21.77 0 0 1 5.06-6.94"/>
@@ -131,7 +137,9 @@
       <!-- Força + checklist -->
       <div class="strength-wrap" *ngIf="senha.length > 0">
         <div class="strength">
-          <div class="strengthbar"><span class="fill" [style.width.%]="strengthPercent" [style.background]="strengthColor"></span></div>
+          <div class="strengthbar">
+            <span class="fill" [style.width.%]="strengthPercent" [style.background]="strengthColor"></span>
+          </div>
           <span class="label">{{ strengthLabel }}</span>
         </div>
         <ul class="rules">
