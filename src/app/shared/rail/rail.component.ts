@@ -54,7 +54,7 @@ import { estaNoBrowser } from '../utils/plataforma';
         </a>
 
         <a class="item" routerLink="/alertas" routerLinkActive="ativo"
-           aria-label="Notificações" matTooltip="Notificações" matTooltipPosition="right" matTooltipShowDelay="200"
+           aria-label="Estatística" matTooltip="Estatística" matTooltipPosition="right" matTooltipShowDelay="200"
            (click)="fecharNoMobile()">
           <mat-icon>notifications</mat-icon>
         </a>

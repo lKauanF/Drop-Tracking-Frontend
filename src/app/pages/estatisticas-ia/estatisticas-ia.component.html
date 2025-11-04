@@ -1,0 +1,27 @@
+<div class="wrap">
+  <h2>Estatísticas</h2>
+
+  <form class="filtros" [formGroup]="filtros" (ngSubmit)="gerar()">
+    <input class="campo" type="date" formControlName="data_de" placeholder="De">
+    <input class="campo" type="date" formControlName="data_ate" placeholder="Até">
+    <input class="campo" type="text" formControlName="prontuario" placeholder="Prontuário">
+    <input class="campo" type="text" formControlName="id_bomba" placeholder="ID">
+    <button class="btn" type="submit" [disabled]="carregando()">Gerar</button>
+  </form>
+
+  <div *ngIf="pacote() as p" class="painel">
+    <div class="resumo">
+      <h3>Resumo</h3>
+      <p>{{ p.ia.resumo }}</p>
+      <ul>
+        <li *ngFor="let i of p.ia.insights">{{ i }}</li>
+      </ul>
+    </div>
+
+    <div class="graficos">
+      <div *ngFor="let g of p.ia.graficos; index as i" class="graf-card">
+        <canvas [id]="'graf-' + i"></canvas>
+      </div>
+    </div>
+  </div>
+</div>

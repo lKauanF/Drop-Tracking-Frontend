@@ -2,58 +2,102 @@ import { Routes } from '@angular/router';
 import { ShellComponent } from './layout/shell/shell.component';
 import { PlaceholderComponent } from './shared/components/placeholder/placeholder.component';
 
+/**
+ * Mapa de rotas da aplicação.
+ *
+ * Convenções usadas:
+ * - Rotas públicas (sem Shell) no topo.
+ * - Rotas autenticadas (com Shell) agrupadas em `children`.
+ * - `loadComponent` sempre lazy (code-splitting).
+ * - `data.title` para títulos de páginas quando útil.
+ * - Comentários com dicas para futuros guards/resolvers.
+ */
 export const routes: Routes = [
-  // ========= PÚBLICO (sem Shell) =========
-  { path: 'entrar', loadComponent: () =>
-      import('./pages/auth/login/login.component').then(m => m.LoginComponent) },
-
-  // Atenção ao nome da classe exportada no componente de cadastro:
-  // geralmente é "CadastroComponent" (primeira maiúscula).
-  {
-  path: 'cadastro',
-  loadComponent: () =>
-    import('./pages/auth/cadastro/cadastro.component').then(m => m.CadastroComponent)
-},
+  // ========= ROTAS PÚBLICAS (fora do Shell) =========
 
   {
-  path: 'recuperar-senha',
-  loadComponent: () =>
-    import('./pages/auth/recuperar-senha/recuperar-senha.component')
-      .then(m => m.RecuperarSenhaComponent)
-},
+    path: 'entrar',
+    loadComponent: () =>
+      import('./pages/auth/login/login.component').then(m => m.LoginComponent),
+    data: { title: 'Entrar' },
+  },
 
+  {
+    path: 'cadastro',
+    loadComponent: () =>
+      import('./pages/auth/cadastro/cadastro.component').then(m => m.CadastroComponent),
+    data: { title: 'Cadastro' },
+  },
 
-  // ========= ÁREA LOGADA (com Shell) =========
+  {
+    path: 'recuperar-senha',
+    loadComponent: () =>
+      import('./pages/auth/recuperar-senha/recuperar-senha.component').then(m => m.RecuperarSenhaComponent),
+    data: { title: 'Recuperar Senha' },
+  },
+
+  // ========= ÁREA LOGADA (dentro do Shell/Layout) =========
   {
     path: '',
     component: ShellComponent,
-    // canActivate: [authGuard], // habilite quando tiver o guard
+    // canActivate: [authGuard], // Habilite quando tiver um guard de autenticação
+    // canActivateChild: [authGuard], // (opcional) protege também as rotas filhas
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'pacientes' }, // default da área logada
-      { path: 'pacientes', loadComponent: () =>
-          import('./pages/pacientes/pacientes.component').then(m => m.PacientesComponent) },
-      { path: 'registros', loadComponent: () =>
-          import('./pages/registros/registros.component').then(m => m.RegistrosComponent) },
+      // Default da área logada → redireciona para "pacientes"
+      { path: '', pathMatch: 'full', redirectTo: 'pacientes' },
 
-      // “Em breve” (opcional): use o componente reutilizável se já criou
-       {
-         path: 'alertas',
-         loadComponent: () => import('./shared/coming-soon/coming-soon.component').then(m => m.ComingSoonComponent),
-         data: { title: 'Notificações', subtitle: 'Em breve…', icon: 'notifications' } },
-       {
-         path: 'config',
-         loadComponent: () => import('./shared/coming-soon/coming-soon.component').then(m => m.ComingSoonComponent),
-         data: { title: 'Configurações', subtitle: 'Em breve…', icon: 'settings' } },
+      {
+        path: 'pacientes',
+        loadComponent: () =>
+          import('./pages/pacientes/pacientes.component').then(m => m.PacientesComponent),
+        data: { title: 'Pacientes' },
+      },
 
-      { path: 'sobre', loadComponent: () => import('./pages/guia/guia.component').then(m => m.GuiaComponent) },
-
-      { path: 'sair', loadComponent: () => import('./pages/auth/login/login.component' ).then(m => m.LoginComponent) },
+      {
+        path: 'registros',
+        loadComponent: () =>
+          import('./pages/registros/registros.component').then(m => m.RegistrosComponent),
+        data: { title: 'Registros' },
+      },
 
     
 
-    ]
+      // Páginas “Em breve” reutilizando um componente genérico
+      {
+        path: 'alertas',
+        loadComponent: () =>
+          import('./pages/estatisticas-ia/estatisticas-ia.component').then(m => m.EstatisticasIaComponent),
+        data: { title: 'Estatísticas (IA)' },
+      },
+
+      {
+        path: 'config',
+        loadComponent: () =>
+          import('./shared/coming-soon/coming-soon.component').then(m => m.ComingSoonComponent),
+        data: { title: 'Configurações', subtitle: 'Em breve…', icon: 'settings' },
+      },
+
+      {
+        path: 'sobre',
+        loadComponent: () =>
+          import('./pages/guia/guia.component').then(m => m.GuiaComponent),
+        data: { title: 'Guia do Usuário' },
+      },
+
+      // “Sair” pode só redirecionar para login; se preferir, trate no guard/interceptor
+      {
+        path: 'sair',
+        loadComponent: () =>
+          import('./pages/auth/login/login.component').then(m => m.LoginComponent),
+        data: { title: 'Sair' },
+      },
+    ],
   },
 
-  // ========= 404 =========
-  { path: '**', component: PlaceholderComponent, data: { titulo: 'Não encontrado' } },
+  // ========= 404 (sempre por último) =========
+  {
+    path: '**',
+    component: PlaceholderComponent,
+    data: { titulo: 'Não encontrado' },
+  },
 ];
